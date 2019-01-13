@@ -24,13 +24,13 @@ public class LinkManager : MonoBehaviour {
     void Start () {
 
         calculateCirclePosition();
-
+        checkIntersections(new Vector2(2,2), new Vector2(100,100), new Vector2(0,0));
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-        runDebugOutput();
+        runOutput();
 
     }
 
@@ -115,9 +115,39 @@ public class LinkManager : MonoBehaviour {
         }
     }
 
+    Vector2 checkIntersections(Vector2 inter1, Vector2 inter2, Vector2 midPoint)
+    {
+        // check to see which point is closest to the Mid Point as this will give the interior position
+        //                                   _______________________
+        // distance formula Distance = Sqrt /(x2-x1)^2 + (y2 - y1)^2
+
+       // float D1, D2;
+
+        double D1 = Math.Sqrt(
+                                ((inter1.x - midPoint.x)* (inter1.x - midPoint.x))        //(x2 - x1)^2
+                                                      +                             //          +
+                                ((inter1.y - midPoint.y) * (inter1.y - midPoint.y)));     //(y2 - y1)^2
+
+        double D2 = Math.Sqrt(
+                                ((inter2.x - midPoint.x) * (inter2.x - midPoint.x))       //(x2 - x1)^2
+                                                      +                             //          +
+                                ((inter2.y - midPoint.y) * (inter2.y - midPoint.y)));     //(y2 - y1)^2
 
 
-    private void runDebugOutput()
+        if (D1 > D2)
+        {
+            return inter1;
+        }
+        else
+        {
+            return inter2;
+        }
+
+
+        
+    }
+
+    private void runOutput()
     {
 
         if (output)
