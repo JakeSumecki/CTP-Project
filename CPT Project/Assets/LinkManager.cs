@@ -8,23 +8,26 @@ public class LinkManager : MonoBehaviour {
     [SerializeField]
     private int specificCorner;
     [SerializeField]
-    bool intersectionPoints = false;
+    bool intersectionPointsB = false;
     [SerializeField]
-    bool midPoints = false;
+    bool midPointsB = false;
     [SerializeField]
-    bool lineEquation = false;
+    bool lineEquationB = false;
+    [SerializeField]
+    bool closestPointB = false;
     [SerializeField]
     private bool output = false;
 
-    Vector2 testMidPoints;
+    Vector2 midPoint;
     Vector2 testLineEq;
-    Vector2[] testIntersectionPoints;
+    Vector2[] intersectionPoints;
+    Vector2 circlePosFin;
 
     // Use this for initialization
     void Start () {
 
-        calculateCirclePosition();
-        checkIntersections(new Vector2(2,2), new Vector2(100,100), new Vector2(0,0));
+        calculateCirclePosition(new Vector2(0,6), new Vector2(6,6), new Vector2(0,0), 3f);
+        //checkIntersections(new Vector2(2,2), new Vector2(100,100), new Vector2(0,0));
     }
 	
 	// Update is called once per frame
@@ -34,32 +37,36 @@ public class LinkManager : MonoBehaviour {
 
     }
 
-    void calculateCirclePosition()
+    // A = current node
+    // B = next node
+    // C = previous node
+    void calculateCirclePosition(Vector2 nodeA, Vector2 nodeB, Vector2 nodeC, float radius)
     {
-        testMidPoints = calculateMidPoint(1, 1, 3, 5);
-        testLineEq = calculateLineEquation(-5, -7, 2, -9);
-        testIntersectionPoints = FindLineCircleIntersections(3, 3, 4, new Vector2(-3, -3), new Vector2(6,6));
-   
+
+        midPoint = calculateMidPoint(nodeB, nodeC);
+        testLineEq = calculateLineEquation(nodeA, midPoint);
+        intersectionPoints = FindLineCircleIntersections(nodeA, 4, new Vector2(-3, -3), new Vector2(6,6));
+        circlePosFin = checkIntersections(intersectionPoints[0], intersectionPoints[1], midPoint);   
+
     }
 
-    Vector2 calculateMidPoint(float x1, float z1, float x2, float z2)
+    Vector2 calculateMidPoint(Vector2 pos1, Vector2 pos2)
     {
-        float x = (x1 + x2) / 2;
-        float z = (z1 + z2) / 2;
 
-        Vector2 midPoint;
-        midPoint.x = x;
-        midPoint.y = z;
+        Vector2 tempMidPoint;
 
-        return midPoint;
+        tempMidPoint.x = (pos1.x + pos2.x) / 2;
+        tempMidPoint.y = (pos1.y + pos2.y) / 2;
+
+        return tempMidPoint;
     }
 
-    Vector2 calculateLineEquation(float x1, float z1, float x2, float z2)
+    Vector2 calculateLineEquation(Vector2 pos1, Vector2 pos2)
     {
         // works, tested
-        float gradient = (z2 - z1) / (x2 - x1);
+        float gradient = (pos2.y - pos1.y) / (pos2.x - pos1.x);
         // works, tested
-        float yIntercept = z1 - (gradient * x1);
+        float yIntercept = pos1.y - (gradient * pos1.x);
 
         Vector2 lineEquation;
 
@@ -70,7 +77,8 @@ public class LinkManager : MonoBehaviour {
     }
 
     // needs to be fully tested
-    private Vector2[] FindLineCircleIntersections(float cx, float cy, float radius, Vector2 point1, Vector2 point2)
+    // need to either change the Point1 & two to use an equation or extend them out
+    private Vector2[] FindLineCircleIntersections(Vector2 circlePos, float radius, Vector2 point1, Vector2 point2)
     {
         float dx, dy, A, B, C, det, t;
 
@@ -80,8 +88,8 @@ public class LinkManager : MonoBehaviour {
         dy = point2.y - point1.y;
 
         A = dx * dx + dy * dy;
-        B = 2 * (dx * (point1.x - cx) + dy * (point1.x - cy));
-        C = (point1.x - cx) * (point1.x - cx) + (point1.y - cy) * (point1.y - cy) - radius * radius;
+        B = 2 * (dx * (point1.x - circlePos.x) + dy * (point1.x - circlePos.y));
+        C = (point1.x - circlePos.x) * (point1.x - circlePos.x) + (point1.y - circlePos.y) * (point1.y - circlePos.y) - radius * radius;
 
         det = B * B - 4 * A * C;
         if ((A <= 0.0000001) || (det < 0))
@@ -115,13 +123,15 @@ public class LinkManager : MonoBehaviour {
         }
     }
 
+    // inter1 = intersection point 1 
+    // inter2 = intersection point 2  
+    // midPoint = mid-point between Node B & node C
+
     Vector2 checkIntersections(Vector2 inter1, Vector2 inter2, Vector2 midPoint)
     {
         // check to see which point is closest to the Mid Point as this will give the interior position
         //                                   _______________________
-        // distance formula Distance = Sqrt /(x2-x1)^2 + (y2 - y1)^2
-
-       // float D1, D2;
+        // Distance formula: Distance = Sqrt /(x2-x1)^2 + (y2 - y1)^2
 
         double D1 = Math.Sqrt(
                                 ((inter1.x - midPoint.x)* (inter1.x - midPoint.x))        //(x2 - x1)^2
@@ -132,19 +142,17 @@ public class LinkManager : MonoBehaviour {
                                 ((inter2.x - midPoint.x) * (inter2.x - midPoint.x))       //(x2 - x1)^2
                                                       +                             //          +
                                 ((inter2.y - midPoint.y) * (inter2.y - midPoint.y)));     //(y2 - y1)^2
-
-
-        if (D1 > D2)
+        // Check which point is furtest from node A
+        if (D1 < D2)
         {
+            Debug.Log(D1);
             return inter1;
         }
         else
         {
+            Debug.Log(D2);
             return inter2;
-        }
-
-
-        
+        }     
     }
 
     private void runOutput()
@@ -152,21 +160,28 @@ public class LinkManager : MonoBehaviour {
 
         if (output)
         {
-            if (intersectionPoints)
+
+            if (midPointsB)
             {
-                Debug.Log(testIntersectionPoints[0]);
-                Debug.Log(testIntersectionPoints[1]);
+                Debug.Log("Mid-Point :" + midPoint);
             }
 
-            if (midPoints)
+            if (lineEquationB)
             {
-                Debug.Log(testMidPoints);
+                Debug.Log("Line Equation : Y = " + testLineEq.x + ".X + " + testLineEq.y);
             }
 
-            if (lineEquation)
+            if (intersectionPointsB)
             {
-                Debug.Log(testLineEq);
+                Debug.Log("Intersecion Point 1 :" + intersectionPoints[0]);
+                Debug.Log("Intersecion Point 2 :" + intersectionPoints[1]);
             }
+
+            if (closestPointB)
+            {
+                Debug.Log("Final circle coordinates :" + circlePosFin);
+            }
+
             output = false;
         }
         return;
