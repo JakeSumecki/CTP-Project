@@ -13,20 +13,25 @@ public class GenerationManager : MonoBehaviour {
     [SerializeField]
     bool cornerDirection = true;
     [SerializeField]
-    bool cornerSize = true;
+    bool cornerRadius = true;
     [SerializeField]
     private bool output = false;
+
+    private GameData gameData;
 
     int numberOfCorners;
     Vector2[] hardCodeCoords;
     int[] hardCodeCornerOrder;
     bool[] hardCodeTurningDirection;
-    float[] hardCodeCornerSize;
+    float[] hardCodeCornerRadius;
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
+        // link gameData
+        gameData = GameObject.FindObjectOfType<GameData>();
 
         numberOfCorners = 14;
+        
 
         hardCodeCoords = new Vector2[]
         {
@@ -78,7 +83,7 @@ public class GenerationManager : MonoBehaviour {
                                                         true
                                                             };
 
-        hardCodeCornerSize = new float[] {  0f,
+        hardCodeCornerRadius = new float[] {  0f,
                                                -8.95f,
                                                -19.82f,
                                                -30f,
@@ -93,10 +98,17 @@ public class GenerationManager : MonoBehaviour {
                                                2.41f,
                                                3.93f
                                              };
+
+        // link these to gameData
+        gameData.setAmountOfCorners(numberOfCorners);
+        gameData.setCornerCoords(hardCodeCoords);
+        gameData.setCornerOrder(hardCodeCornerOrder);
+        gameData.setCornerTurningDirection(hardCodeTurningDirection);
+        gameData.setCornerRadius(hardCodeCornerRadius);
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 
         runDebugOutput();
 
@@ -126,9 +138,9 @@ public class GenerationManager : MonoBehaviour {
                 {
                     Debug.Log("Corner Order : " + hardCodeCornerOrder[i]);
                 }
-                if (cornerSize) 
+                if (cornerRadius) 
                 {
-                    Debug.Log("Corner Size : " + hardCodeCornerSize[i]);
+                    Debug.Log("Corner Radius : " + hardCodeCornerRadius[i]);
                 }
             }
         }
@@ -147,9 +159,9 @@ public class GenerationManager : MonoBehaviour {
             {
                 Debug.Log("Corner Order : " + hardCodeCornerOrder[specificCorner - 1]);
             }
-            if (cornerSize)
+            if (cornerRadius)
             {
-                Debug.Log("Corner Size : " + hardCodeCornerSize[specificCorner - 1]);
+                Debug.Log("Corner Radius : " + hardCodeCornerRadius[specificCorner - 1]);
             }
         }
         output = false;
