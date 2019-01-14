@@ -32,10 +32,12 @@ public class LinkManager : MonoBehaviour {
 
         // link gameData
         gameData = GameObject.FindObjectOfType<GameData>();
+        
+        findCircleCircleTangents(new Vector2(0.0f,0.0f), 5.0f, new Vector2(11.0f, 0.0f), 3.0f);
 
-        Debug.Log(findLastAngleInTriangle(30.6f, 90f));
+        //calculatePointDFromABC(new Vector2(6f,6f), new Vector2(12f,0f), new Vector2(0f,0f));
 
-        createCircles();
+        //createCircles();
 
     }
 
@@ -225,13 +227,38 @@ public class LinkManager : MonoBehaviour {
     /// <returns>Vector2 of the coordinates of point D</returns>
     Vector2 calculatePointDFromABC(Vector2 nodeA, Vector2 nodeB, Vector2 nodeC)
     {
-        double sideAC = calculateDistance(nodeA, nodeC);                
+        double answerX;
+        double answerY;
+
+        Vector2 answer;
+        Vector2 XCoords;
+
+        // angle ADC = 90
         double angleDCA = calculateAngle(nodeB, nodeC, nodeA);
-        double angleCAD = findLastAngleInTriangle(angleDCA, 90f); 
-                                                                        
-        double sideAD = calculateSideAAS(angleDCA, sideAC, 90f);       
-        //double sideCD = calculateSideAAS                                
-                                                                       
+        double angleCAD = findLastAngleInTriangle(angleDCA, 90f);
+
+        double sideAC = calculateDistance(nodeA, nodeC);
+        double sideAD = calculateSideAAS(angleDCA, 90f, sideAC);
+        double sideCD = calculateSideAAS(angleCAD, angleDCA, sideAD);
+        Debug.Log(sideAD);
+        Debug.Log(sideCD);
+        Debug.Log(sideAC);
+
+        //       AB^2 + AC^2 - BC^2     |              ___________
+        //  Cy = -------------------    |   Cx = (+-) /AC^2 - Cy^2
+        //             2AB              |              
+
+        //answerY = ((sideAD * sideAD) + (sideAC * sideAC) - (sideCD * sideCD)) / (2 * sideAD);
+        answerY = ((sideAC * sideAC) + (sideCD * sideCD) - (sideAD * sideAD)) / (2 * sideAC);
+        answerX = Math.Sqrt((sideAC * sideAC) - (answerY * answerY));
+
+        //Debug.Log(answerX + " : " + answerY);
+        Debug.Log(answerY);
+
+        //answer.y = ((sideAD * sideAD) + (sideAC * sideAC) - (sideCD * sideCD)) / 2 * sideAD;
+        //XCoords = Math.Sqrt((sideAC * sideAC) - (answer.y * answer.y));
+
+
         return Vector2.zero;
     }
 
@@ -242,10 +269,10 @@ public class LinkManager : MonoBehaviour {
     /// <param name="angleB">Angle opposite another side</param>
     /// <param name="sideB">Side of the other angle</param>
     /// <returns></returns>
-    private double calculateSideAAS(double angleA, double angleB,float sideB)
+    private double calculateSideAAS(double angleA, double angleB, double sideB)
     {
         double answer = (sideB * Math.Sin(convertToRadians(angleA))) / Math.Sin(convertToRadians(angleB));
-        Debug.Log(answer);
+        answer = makePositive(answer);
         return answer;
     }
 
@@ -269,7 +296,7 @@ public class LinkManager : MonoBehaviour {
         double answer = (atanA - atanB) * (-180 / Math.PI);
 
         // make it positive
-        answer = Math.Sqrt(answer * answer);
+        answer = makePositive(answer);
 
         return answer;
     }
@@ -322,20 +349,188 @@ public class LinkManager : MonoBehaviour {
         return (Math.PI / 180) * angle;
     }
 
-
     /// <summary>
     /// Takes two andles in a triangle and returns the last one in degrees
     /// </summary>
     /// <param name="angle1">First angle</param>
     /// <param name="angle2">Second angle</param>
     /// <returns></returns>
-    public double findLastAngleInTriangle(double angle1, double angle2)
+    private double findLastAngleInTriangle(double angle1, double angle2)
     {
 
         double answer = 180 - angle1 - angle2;
 
         return answer;
     }
+
+    /// <summary>
+    /// Takes a number and makes it positive
+    /// </summary>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    private double makePositive(double number)
+    {
+        double answer = Math.Sqrt(number * number);
+        return answer;
+    }
+
+    //----------------TEST
+
+    //      IMPORTANT! MIGHT NEED TO ADD ANOTHER FUNCTION FOR THIS TO WORK (FindTangents)
+
+    /// <summary>
+    /// Find the tangent points for these two circles.
+    /// </summary>
+    /// <param name="c1"> Circle 1's coordinates (center)</param>
+    /// <param name="radius1"> </param>
+    /// <param name="c2"> Circle 2's coordinates (center)</param>
+    /// <param name="radius2"> Circle 2's radius</param>
+    /// <returns></returns>
+    private Vector2[] findCircleCircleTangents(Vector2 c1, float radius1, Vector2 c2, float radius2)
+    {
+        Vector2[] tangents = new Vector2[8];
+
+        Vector2 outer1_p1 = new Vector2(-1, -1);
+        Vector2 outer1_p2 = new Vector2(-1, -1);
+        Vector2 outer2_p1 = new Vector2(-1, -1);
+        Vector2 outer2_p2 = new Vector2(-1, -1);
+        Vector2 inner1_p1 = new Vector2(-1, -1);
+        Vector2 inner1_p2 = new Vector2(-1, -1);
+        Vector2 inner2_p1 = new Vector2(-1, -1);
+        Vector2 inner2_p2 = new Vector2(-1, -1);
+
+        // Make sure radius1 <= radius2
+        if (radius1 > radius2)
+        {
+            // Call this method switching the circles.
+            return findCircleCircleTangents(c2, radius2, c1, radius1);
+        }
+
+        // ***************************
+        // * Find the outer tangents *
+        // ***************************
+        {
+            float radius2a = radius2 - radius1;
+            //if (!FindTangents(c2, radius2a, c1,
+            //    out outer1_p2, out outer2_p2))
+            //{
+            //    // There are no tangents.
+            //    return 0;
+            //}
+
+            // Get the vector perpendicular to the
+            // first tangent with length radius1.
+            float v1x = -(outer1_p2.y - c1.y);
+            float v1y = outer1_p2.x - c1.x;
+            float v1_length = (float)Math.Sqrt(v1x * v1x + v1y * v1y);
+            v1x *= radius1 / v1_length;
+            v1y *= radius1 / v1_length;
+            // Offset the tangent vector's points.
+            outer1_p1 = new Vector2(c1.x + v1x, c1.y + v1y);
+            outer1_p2 = new Vector2(outer1_p2.x + v1x, outer1_p2.y + v1y);
+            //Debug.Log(outer1_p1);
+
+            // Get the vector perpendicular to the
+            // second tangent with length radius1.
+            float v2x = outer2_p2.y - c1.y;
+            float v2y = -(outer2_p2.x - c1.x);
+            float v2_length = (float)Math.Sqrt(v2x * v2x + v2y * v2y);
+            v2x *= radius1 / v2_length;
+            v2y *= radius1 / v2_length;
+            // Offset the tangent vector's points.
+            outer2_p1 = new Vector2(c1.x + v2x, c1.y + v2y);
+            outer2_p2 = new Vector2(outer2_p2.x + v2x, outer2_p2.y + v2y);
+        }
+
+        // put tangent points into tangents[]
+        tangents[0] = outer1_p1;
+        tangents[1] = outer1_p2;
+        tangents[2] = outer2_p1;
+        tangents[3] = outer2_p2;
+
+        // If the circles intersect, then there are no inner tangents.
+        float dx = c2.x - c1.x;
+        float dy = c2.y - c1.y;
+        double dist = Math.Sqrt(dx * dx + dy * dy);
+        if (dist <= radius1 + radius2)
+        {
+            return tangents;
+        }
+        // ***************************
+        // * Find the inner tangents *
+        // ***************************
+        {
+            float radius1a = radius1 + radius2;
+            //FindTangents(c1, radius1a, c2,
+            //    out inner1_p2, out inner2_p2);
+
+            // Get the vector perpendicular to the
+            // first tangent with length radius2.
+            float v1x = inner1_p2.y - c2.y;
+            float v1y = -(inner1_p2.x - c2.x);
+            float v1_length = (float)Math.Sqrt(v1x * v1x + v1y * v1y);
+            v1x *= radius2 / v1_length;
+            v1y *= radius2 / v1_length;
+            // Offset the tangent vector's points.
+            inner1_p1 = new Vector2(c2.x + v1x, c2.y + v1y);
+            inner1_p2 = new Vector2(inner1_p2.x + v1x, inner1_p2.y + v1y);
+
+            // Get the vector perpendicular to the
+            // second tangent with length radius2.
+            float v2x = -(inner2_p2.y - c2.y);
+            float v2y = inner2_p2.x - c2.x;
+            float v2_length = (float)Math.Sqrt(v2x * v2x + v2y * v2y);
+            v2x *= radius2 / v2_length;
+            v2y *= radius2 / v2_length;
+            // Offset the tangent vector's points.
+            inner2_p1 = new Vector2(c2.x + v2x, c2.y + v2y);
+            inner2_p2 = new Vector2(inner2_p2.x + v2x, inner2_p2.y + v2y);
+        }
+
+        tangents[4] = inner1_p1;
+        tangents[5] = inner1_p2;
+        tangents[6] = inner2_p1;
+        tangents[7] = inner2_p2;
+
+        for (int i = 0; i < tangents.Length; i++)
+        {
+            Debug.Log(tangents[i]);
+        }
+
+        return tangents;
+    }
+
+    // Find the tangent points for this circle and external point.
+    // Return true if we find the tangents, false if the point is
+    // inside the circle.
+    //private bool findTangents(Vector2 center, float radius,
+    //    Vector2 external_point, out Vector2 pt1, out Vector2 pt2)
+    //{
+    //    // Find the distance squared from the
+    //    // external point to the circle's center.
+    //    double dx = center.x - external_point.x;
+    //    double dy = center.y - external_point.y;
+    //    double D_squared = dx * dx + dy * dy;
+    //    if (D_squared < radius * radius)
+    //    {
+    //        pt1 = new Vector2(-1, -1);
+    //        pt2 = new Vector2(-1, -1);
+    //        return false;
+    //    }
+
+    //    // Find the distance from the external point
+    //    // to the tangent points.
+    //    double L = Math.Sqrt(D_squared - radius * radius);
+
+    //    // Find the points of intersection between
+    //    // the original circle and the circle with
+    //    // center external_point and radius dist.
+    //    FindCircleCircleIntersections(
+    //        center.x, center.y, radius,
+    //        external_point.x, external_point.y, (float)L,
+    //        out pt1, out pt2);
+    //    return true;
+    //}
 
     /// <summary>
     /// Used to output data to Unity's debugger
