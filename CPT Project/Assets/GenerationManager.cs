@@ -83,20 +83,20 @@ public class GenerationManager : MonoBehaviour {
                                                         true
                                                             };
 
-        hardCodeCornerRadius = new float[] {  2f,
+        hardCodeCornerRadius = new float[] {  0.75f,
+                                               0.625f,
+                                               0.625f,
+                                               0.75f,
+                                               0.75f,
+                                               0.75f,
+                                               1f,
+                                               5f,
+                                               2.5f,
+                                               2.5f,
+                                               4f,
                                                2f,
-                                               2f,
-                                               2f,
-                                               2f,
-                                               2f,
-                                               2f,
-                                               2f,
-                                               2f,
-                                               2f,
-                                               2f,
-                                               2f,
-                                               2f,
-                                               2f
+                                               1.5f,
+                                               0.625f
                                              };
 
         // link these to gameData
