@@ -447,7 +447,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 137247875}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.85, y: 0, z: -15.99}
+  m_LocalPosition: {x: -4.85, y: 0, z: -16.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1203,9 +1203,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   specificCorner: 0
-  intersectionPoints: 0
-  midPoints: 0
-  lineEquation: 0
+  intersectionPointsB: 0
+  midPointsB: 0
+  lineEquationB: 0
+  closestPointB: 0
   output: 0
 --- !u!114 &1263264449
 MonoBehaviour:
@@ -1222,7 +1223,7 @@ MonoBehaviour:
   cornerPos: 1
   cornerOrder: 0
   cornerDirection: 0
-  cornerSize: 0
+  cornerRadius: 1
   output: 0
 --- !u!114 &1263264450
 MonoBehaviour:

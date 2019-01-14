@@ -25,7 +25,7 @@ public class LinkManager : MonoBehaviour {
     Vector2[] intersectionPoints;
     Vector2 circlePosFin;
 
-    Vector2[] circlePositions;
+    Vector2[] circlePositions = new Vector2[50];
 
     // Use this for initialization
     void Start () {
@@ -37,7 +37,7 @@ public class LinkManager : MonoBehaviour {
         //calculateCirclePosition(new Vector2(0f,-30f), new Vector2(-17.62f, -21.07f), new Vector2(0f,0f), 1f);
         //checkIntersections(new Vector2(2,2), new Vector2(100,100), new Vector2(0,0));
 
-        //createCirclePositions();
+       
 
         //for (int i = 0; i < 14; i++)
         //{
@@ -47,29 +47,33 @@ public class LinkManager : MonoBehaviour {
         //    Debug.Log("Turning Direction : " + gameData.getCornerTurningDirectionAtPos(i));
         //    Debug.Log("Radius : " + gameData.getCornerRadiusAtPos(i));
         //}
+
+        createCirclePositions();
+
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 
         runOutput();
 
     }
 
-    // A = current node
-    // B = next node
-    // C = previous node
 
     void createCirclePositions()
     {
 
-        Debug.Log(gameData.getAmountOfCorners());
-        for(int i = 0; i < gameData.getAmountOfCorners(); i++ )
-        {  
-            // when at the start wont be able to acces NodeC as its the last in the array
-            if(i == 0)
+        //circlePositions[1] = calculateCirclePosition(gameData.getCornerCoordsAtPos(1),      //NodeA
+        //                                             gameData.getCornerCoordsAtPos(2),  //NodeB
+        //                                             gameData.getCornerCoordsAtPos(0),   //NodeC
+        //                                             gameData.getCornerRadiusAtPos(1));     //Radius
+        //Debug.Log(circlePositions[1]);
+
+        for (int i = 0; i < gameData.getAmountOfCorners(); i++)
+        {
+            //when at the start wont be able to acces NodeC as its the last in the array
+            if (i == 0)
             {
-                Debug.Log("Here");
                 circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
                                                              gameData.getCornerCoordsAtPos(i + 1),  //NodeB
                                                              gameData.getCornerCoordsAtPos(gameData.getAmountOfCorners() - 1),   //NodeC
@@ -85,27 +89,23 @@ public class LinkManager : MonoBehaviour {
                                                              gameData.getCornerCoordsAtPos(i - 1),   //NodeC
                                                              gameData.getCornerRadiusAtPos(i));     //Radius
             }
-
-            // if not at the start or end use adjacent nodes as B & C
+            //if not at the start or end use adjacent nodes as B & C
             else
-            {
+            {;
                 circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
                                                              gameData.getCornerCoordsAtPos(i + 1),  //NodeB
-                                                             gameData.getCornerCoordsAtPos(i -1),   //NodeC
+                                                             gameData.getCornerCoordsAtPos(i - 1),   //NodeC
                                                              gameData.getCornerRadiusAtPos(i));     //Radius
             }
 
             Debug.Log(circlePositions[i]);
         }
 
-        
+
     }
 
     Vector2 calculateCirclePosition(Vector2 nodeA, Vector2 nodeB, Vector2 nodeC, float radius)
     {
-        
-
-
         midPoint = calculateMidPoint(nodeB, nodeC);
         //testLineEq = calculateLineEquation(nodeA, midPoint);
         intersectionPoints = findLineCircleIntersections(nodeA, radius, nodeA, midPoint);
@@ -165,19 +165,19 @@ public class LinkManager : MonoBehaviour {
             intersections[0] = Vector2.zero;
             intersections[1] = Vector2.zero;
 
-            Debug.Log("0");
+            //Debug.Log("0");
 
             return intersections;
         }
         else if (det == 0)
         {
-            // One solution.
+            // One solution
             t = -B / (2 * A);
 
             intersections[0] = new Vector2(point1.x + t * dx, point1.y + t * dy);
             intersections[1] = Vector2.zero;
 
-            Debug.Log("1");
+            //Debug.Log("1");
 
             return intersections;
         }
@@ -189,7 +189,7 @@ public class LinkManager : MonoBehaviour {
             t = (float)((-B - Math.Sqrt(det)) / (2 * A));
             intersections[1] = new Vector2(point1.x + t * dx, point1.y + t * dy);
 
-            Debug.Log("2");
+            //Debug.Log("2");
 
             return intersections;
         }
