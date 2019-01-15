@@ -20,6 +20,8 @@ public class LinkManager : MonoBehaviour {
 
     private GameData gameData;
 
+   // gameObject circle;
+
     Vector2 midPoint;
     Vector2 testLineEq;
     Vector2[] intersectionPoints;
@@ -108,6 +110,7 @@ public class LinkManager : MonoBehaviour {
         //testLineEq = calculateLineEquation(nodeA, midPoint);
         intersectionPoints = findLineCircleIntersections(nodeA, radius, nodeA, midPoint);
         circlePosFin = checkIntersections(intersectionPoints[0], intersectionPoints[1], midPoint);
+        //Instantiate(original, new Vector3(circlePosFin.x, 0.0f, circlePosFin.y), Quaternion rotation);
 
         return circlePosFin;
     }
