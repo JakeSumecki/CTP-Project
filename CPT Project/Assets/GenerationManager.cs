@@ -93,7 +93,7 @@ public class GenerationManager : MonoBehaviour {
                                                5f,
                                                2.5f,
                                                2.5f,
-                                               4f,
+                                               2f,
                                                2f,
                                                1.5f,
                                                0.625f

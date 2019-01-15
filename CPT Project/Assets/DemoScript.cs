@@ -24,6 +24,12 @@ public class DemoScript : MonoBehaviour {
     public GameObject[] P2Stage1;
     public GameObject[] P2Stage2;
 
+    public GameObject tanPoints1;
+    public GameObject tanPoints2;
+    public GameObject tanPointsFin;
+
+    public GameObject Circles;
+
     bool pressed = true;
     int stepIterator = 0;
 
@@ -39,6 +45,7 @@ public class DemoScript : MonoBehaviour {
     GameObject lines2;
     GameObject lines3;
     GameObject lines4;
+    GameObject circles;
 
     // Use this for initialization
     void Start () {
@@ -124,20 +131,27 @@ public class DemoScript : MonoBehaviour {
                     break;
                 case 13:
                     // create all circles
-                    Destroy(prevGameObject2);
+                    Destroy(prevGameObject1);
                     Destroy(dots1);
                     Destroy(dots2);
                     Destroy(dots3);
                     Destroy(dots4);
                     Destroy(lines4);
+                    circles = Instantiate(Circles);
                     break;
                 case 14:
+                    currentView = views[1];
                     break;
                 case 15:
+                    prevGameObject1 = Instantiate(tanPoints1);
                     break;
                 case 16:
+                    prevGameObject2 = Instantiate(tanPoints2);
                     break;
                 case 17:
+                    Destroy(prevGameObject1);
+                    Destroy(prevGameObject2);
+                    prevGameObject1 = Instantiate(tanPointsFin);
                     break;
             }
         }
@@ -147,6 +161,12 @@ public class DemoScript : MonoBehaviour {
     void LateUpdate()
     {
         camera.transform.position = Vector3.Lerp(camera.transform.position, currentView.position, Time.deltaTime * transitionSpeed);
+
+        Vector3 currentAngle = new Vector3(Mathf.LerpAngle(camera.transform.rotation.eulerAngles.x, currentView.transform.rotation.eulerAngles.x, Time.deltaTime * transitionSpeed),
+                                            Mathf.LerpAngle(camera.transform.rotation.eulerAngles.y, currentView.transform.rotation.eulerAngles.y, Time.deltaTime * transitionSpeed),
+                                            Mathf.LerpAngle(camera.transform.rotation.eulerAngles.z, currentView.transform.rotation.eulerAngles.z, Time.deltaTime * transitionSpeed));
+
+        camera.transform.eulerAngles = currentAngle;
     }
 
     //void instantiatePrefabs(GameObject[] array)
