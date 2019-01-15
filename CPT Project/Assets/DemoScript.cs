@@ -16,6 +16,11 @@ public class DemoScript : MonoBehaviour {
     public GameObject P1Stage3;
     public GameObject P1Stage4;
 
+    public GameObject line1;
+    public GameObject line2;
+    public GameObject line3;
+    public GameObject line4;
+
     public GameObject[] P2Stage1;
     public GameObject[] P2Stage2;
 
@@ -26,6 +31,14 @@ public class DemoScript : MonoBehaviour {
     GameObject prevGameObject2;
     GameObject prevGameObject3;
     GameObject prevGameObject4;
+    GameObject dots1;
+    GameObject dots2;
+    GameObject dots3;
+    GameObject dots4;
+    GameObject lines1;
+    GameObject lines2;
+    GameObject lines3;
+    GameObject lines4;
 
     // Use this for initialization
     void Start () {
@@ -54,16 +67,23 @@ public class DemoScript : MonoBehaviour {
                 case 0:
                     break;
                 case 1:
-                    prevGameObject1 = Instantiate(P1Stage1);
+                    dots1 = Instantiate(P1Stage1);
+                    lines1 = Instantiate(line1);
                     break;
                 case 2:
-                    prevGameObject2 = Instantiate(P1Stage2);
+                    Destroy(lines1);
+                    dots2 = Instantiate(P1Stage2);
+                    lines2 = Instantiate(line2);
                     break;
                 case 3:
-                    prevGameObject3 = Instantiate(P1Stage3);
+                    Destroy(lines2);
+                    dots3 = Instantiate(P1Stage3);
+                    lines3 = Instantiate(line3);
                     break;
                 case 4:
-                    prevGameObject4 = Instantiate(P1Stage4);
+                    Destroy(lines3);
+                    dots4 = Instantiate(P1Stage4);
+                    lines4 = Instantiate(line4);
                     break;
                 case 5:
                     currentView = views[0];
@@ -94,6 +114,7 @@ public class DemoScript : MonoBehaviour {
                     break;
                 case 11:
                     // highlight dot
+                    Destroy(prevGameObject4);
                     Destroy(prevGameObject1);
                     prevGameObject1 = Instantiate(P2Stage1[5]);
                     break;
@@ -102,6 +123,13 @@ public class DemoScript : MonoBehaviour {
                     prevGameObject2 = Instantiate(P2Stage1[6]);
                     break;
                 case 13:
+                    // create all circles
+                    Destroy(prevGameObject2);
+                    Destroy(dots1);
+                    Destroy(dots2);
+                    Destroy(dots3);
+                    Destroy(dots4);
+                    Destroy(lines4);
                     break;
                 case 14:
                     break;
