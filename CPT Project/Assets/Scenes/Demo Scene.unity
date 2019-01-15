@@ -1295,7 +1295,7 @@ MonoBehaviour:
   cornerPos: 1
   cornerOrder: 0
   cornerDirection: 0
-  cornerRadius: 1
+  cornerRadius: 0
   output: 0
 --- !u!114 &1263264450
 MonoBehaviour:
