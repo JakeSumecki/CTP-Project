@@ -29,6 +29,7 @@ public class DemoScript : MonoBehaviour {
     public GameObject tanPointsFin;
 
     public GameObject Circles;
+    public GameObject straights;
 
     bool pressed = true;
     int stepIterator = 0;
@@ -46,6 +47,8 @@ public class DemoScript : MonoBehaviour {
     GameObject lines3;
     GameObject lines4;
     GameObject circles;
+
+    
 
     // Use this for initialization
     void Start () {
@@ -96,33 +99,33 @@ public class DemoScript : MonoBehaviour {
                     currentView = views[0];
                     break;
                 case 6:
-                    // midpoint
-                    prevGameObject1 = Instantiate(P2Stage1[0]);
-                    break;
-                case 7:
                     // line of symmetry
                     Destroy(prevGameObject1);
-                    prevGameObject2 = Instantiate(P2Stage1[1]);
+                    prevGameObject1 = Instantiate(P2Stage1[1]);
+                    break;
+                case 7:
+                    //circle
+                    prevGameObject2 = Instantiate(P2Stage1[2]);
                     break;
                 case 8:
-                    //circle
-                    prevGameObject3 = Instantiate(P2Stage1[2]);
+                    //Intersection points
+                    prevGameObject3 = Instantiate(P2Stage1[3]);
                     break;
                 case 9:
-                    //Intersection points
-                    prevGameObject4 = Instantiate(P2Stage1[3]);
+                    Destroy(prevGameObject1);
+                    Destroy(prevGameObject2);
+                    // midpoint
+                    prevGameObject4 = Instantiate(P2Stage1[0]);
                     break;
                 case 10:
                     // closest to mid-point
-                    Destroy(prevGameObject1);
-                    Destroy(prevGameObject2);
-                    Destroy(prevGameObject3);
+                    Destroy(prevGameObject4);
                     prevGameObject1 = Instantiate(P2Stage1[4]);
                     break;
                 case 11:
                     // highlight dot
-                    Destroy(prevGameObject4);
                     Destroy(prevGameObject1);
+                    Destroy(prevGameObject3);
                     prevGameObject1 = Instantiate(P2Stage1[5]);
                     break;
                 case 12:
@@ -152,6 +155,12 @@ public class DemoScript : MonoBehaviour {
                     Destroy(prevGameObject1);
                     Destroy(prevGameObject2);
                     prevGameObject1 = Instantiate(tanPointsFin);
+                    break;
+                case 18:
+                    currentView = views[2];
+                    break;
+                case 19:
+                    prevGameObject2 = Instantiate(straights);
                     break;
             }
         }
