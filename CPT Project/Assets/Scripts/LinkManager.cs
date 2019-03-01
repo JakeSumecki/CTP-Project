@@ -45,7 +45,7 @@ public class LinkManager : MonoBehaviour {
 
         //calculatePointDFromABC(new Vector2(6f,6f), new Vector2(12f,0f), new Vector2(0f,0f));
 
-        //createCircles();
+        createCircles();
 
     }
 
@@ -91,7 +91,7 @@ public class LinkManager : MonoBehaviour {
                                                              gameData.getCornerCoordsAtPos(i - 1),  //NodeC
                                                              gameData.getCornerRadiusAtPos(i));     //Radius
             }
-            //Debug.Log(circlePositions[i]);
+            Debug.Log(circlePositions[i]);
         }
     }
 

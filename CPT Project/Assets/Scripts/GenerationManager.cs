@@ -33,7 +33,7 @@ public class GenerationManager : MonoBehaviour {
         numberOfCorners = 14;
         gameData.setAmountOfCorners(numberOfCorners);
 
-        previousData();
+        hardcodedData();
 
 
     }
@@ -99,7 +99,7 @@ public class GenerationManager : MonoBehaviour {
         return;
     }
 
-    void previousData()
+    void hardcodedData()
     {
         hardCodeCoords = new Vector2[]
         {
@@ -166,6 +166,22 @@ public class GenerationManager : MonoBehaviour {
                                                1.5f,
                                                0.625f
                                              };
+
+        List<Corner> tempCorners = new List<Corner>();
+
+        for (int i = 0; i < numberOfCorners; i++)
+        {
+            Corner tempCorner = new Corner();
+
+            tempCorner.setPlaceholderCoordinates(hardCodeCoords[i]);
+            tempCorner.setIndex(hardCodeCornerOrder[i]);
+            tempCorner.setRadius(hardCodeCornerRadius[i]);
+            tempCorner.setDirection(hardCodeTurningDirection[i]);
+
+            tempCorner.setFinalCoordinates(Vector2.zero);
+
+            tempCorners.Add(tempCorner);
+        }
 
         // link these to gameData
         gameData.setCornerCoords(hardCodeCoords);
