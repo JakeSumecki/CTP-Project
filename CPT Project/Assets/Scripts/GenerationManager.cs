@@ -31,8 +31,76 @@ public class GenerationManager : MonoBehaviour {
         gameData = GameObject.FindObjectOfType<GameData>();
 
         numberOfCorners = 14;
-        
+        gameData.setAmountOfCorners(numberOfCorners);
 
+        previousData();
+
+
+    }
+
+    // Update is called once per frame
+    void Update () {
+
+        runDebugOutput();
+
+    }
+    
+    private void runDebugOutput()
+    {
+        if (output && specificCorner == 0)
+        {
+            Debug.Log("Total Corners" + numberOfCorners);
+
+            for (int i = 0; i < numberOfCorners; i++)
+            {
+
+                int j = i + 1;
+                Debug.Log("Corner Number :" + j);
+
+                if (cornerPos)
+                {
+                    Debug.Log("Corner Coordinates : " + hardCodeCoords[i]);
+                }
+                if (cornerOrder)
+                {
+                    Debug.Log("Corner Direction : " + hardCodeTurningDirection[i]);
+                }
+                if (cornerDirection)
+                {
+                    Debug.Log("Corner Order : " + hardCodeCornerOrder[i]);
+                }
+                if (cornerRadius) 
+                {
+                    Debug.Log("Corner Radius : " + hardCodeCornerRadius[i]);
+                }
+            }
+        }
+        else if(output && specificCorner != 0)
+        {
+            Debug.Log("Corner Number :" + specificCorner);
+            if (cornerPos)
+            {
+                Debug.Log("Corner Coordinates : " + hardCodeCoords[specificCorner - 1]);
+            }
+            if (cornerOrder)
+            {
+                Debug.Log("Corner Direction : " + hardCodeTurningDirection[specificCorner - 1]);
+            }
+            if (cornerDirection)
+            {
+                Debug.Log("Corner Order : " + hardCodeCornerOrder[specificCorner - 1]);
+            }
+            if (cornerRadius)
+            {
+                Debug.Log("Corner Radius : " + hardCodeCornerRadius[specificCorner - 1]);
+            }
+        }
+        output = false;
+        return;
+    }
+
+    void previousData()
+    {
         hardCodeCoords = new Vector2[]
         {
         new Vector2(0f,0f),
@@ -100,71 +168,9 @@ public class GenerationManager : MonoBehaviour {
                                              };
 
         // link these to gameData
-        gameData.setAmountOfCorners(numberOfCorners);
         gameData.setCornerCoords(hardCodeCoords);
         gameData.setCornerOrder(hardCodeCornerOrder);
         gameData.setCornerTurningDirection(hardCodeTurningDirection);
         gameData.setCornerRadius(hardCodeCornerRadius);
-    }
-
-    // Update is called once per frame
-    void Update () {
-
-        runDebugOutput();
-
-    }
-    
-    private void runDebugOutput()
-    {
-        if (output && specificCorner == 0)
-        {
-            Debug.Log("Total Corners" + numberOfCorners);
-
-            for (int i = 0; i < numberOfCorners; i++)
-            {
-
-                int j = i + 1;
-                Debug.Log("Corner Number :" + j);
-
-                if (cornerPos)
-                {
-                    Debug.Log("Corner Coordinates : " + hardCodeCoords[i]);
-                }
-                if (cornerOrder)
-                {
-                    Debug.Log("Corner Direction : " + hardCodeTurningDirection[i]);
-                }
-                if (cornerDirection)
-                {
-                    Debug.Log("Corner Order : " + hardCodeCornerOrder[i]);
-                }
-                if (cornerRadius) 
-                {
-                    Debug.Log("Corner Radius : " + hardCodeCornerRadius[i]);
-                }
-            }
-        }
-        else if(output && specificCorner != 0)
-        {
-            Debug.Log("Corner Number :" + specificCorner);
-            if (cornerPos)
-            {
-                Debug.Log("Corner Coordinates : " + hardCodeCoords[specificCorner - 1]);
-            }
-            if (cornerOrder)
-            {
-                Debug.Log("Corner Direction : " + hardCodeTurningDirection[specificCorner - 1]);
-            }
-            if (cornerDirection)
-            {
-                Debug.Log("Corner Order : " + hardCodeCornerOrder[specificCorner - 1]);
-            }
-            if (cornerRadius)
-            {
-                Debug.Log("Corner Radius : " + hardCodeCornerRadius[specificCorner - 1]);
-            }
-        }
-        output = false;
-        return;
     }
 }
