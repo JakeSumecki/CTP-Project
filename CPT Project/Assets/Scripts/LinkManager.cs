@@ -45,7 +45,7 @@ public class LinkManager : MonoBehaviour {
 
         //calculatePointDFromABC(new Vector2(6f,6f), new Vector2(12f,0f), new Vector2(0f,0f));
 
-        createCircles();
+        createCirclesFromPlaceholderCoordinates();
 
     }
 
@@ -59,37 +59,69 @@ public class LinkManager : MonoBehaviour {
     /// <summary>
     /// Creates the circles
     /// </summary>
-    void createCircles()
+    void createCirclesFromPlaceholderCoordinates()
     {
-        
+
+        //// loop through all corners
+        //for (int i = 0; i < gameData.getAmountOfCorners(); i++)
+        //{
+        //    //when at the start wont be able to access NodeC as its the last in the array
+        //    if (i == 0)
+        //    {
+        //        circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
+        //                                                     gameData.getCornerCoordsAtPos(i + 1),  //NodeB
+        //                                                     gameData.getCornerCoordsAtPos(gameData.getAmountOfCorners() - 1),   //NodeC
+        //                                                     gameData.getCornerRadiusAtPos(i));     //Radius
+
+        //    }
+
+        //    //when at the end wont be able to access NodeB because its at the start
+        //    else if (i == gameData.getAmountOfCorners() - 1)
+        //    {
+        //        circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
+        //                                                     gameData.getCornerCoordsAtPos(0),      //NodeB
+        //                                                     gameData.getCornerCoordsAtPos(i - 1),  //NodeC
+        //                                                     gameData.getCornerRadiusAtPos(i));     //Radius
+        //    }
+        //    //if not at the start or end use adjacent nodes as B & C
+        //    else
+        //    {;
+        //        circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
+        //                                                     gameData.getCornerCoordsAtPos(i + 1),  //NodeB
+        //                                                     gameData.getCornerCoordsAtPos(i - 1),  //NodeC
+        //                                                     gameData.getCornerRadiusAtPos(i));     //Radius
+        //    }
+        //    Debug.Log(circlePositions[i]);
+        //}
         // loop through all corners
         for (int i = 0; i < gameData.getAmountOfCorners(); i++)
         {
             //when at the start wont be able to access NodeC as its the last in the array
             if (i == 0)
             {
-                circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
-                                                             gameData.getCornerCoordsAtPos(i + 1),  //NodeB
-                                                             gameData.getCornerCoordsAtPos(gameData.getAmountOfCorners() - 1),   //NodeC
-                                                             gameData.getCornerRadiusAtPos(i));     //Radius
+                circlePositions[i] = calculateCirclePosition(gameData.getPlaceholderCoordsAtIndex(i),      //NodeA
+                                                             gameData.getPlaceholderCoordsAtIndex(i + 1),  //NodeB
+                                                             gameData.getPlaceholderCoordsAtIndex(gameData.getAmountOfCorners() - 1),   //NodeC
+                                                             gameData.getRadiusAtIndex(i));     //Radius
 
             }
 
             //when at the end wont be able to access NodeB because its at the start
             else if (i == gameData.getAmountOfCorners() - 1)
             {
-                circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
-                                                             gameData.getCornerCoordsAtPos(0),      //NodeB
-                                                             gameData.getCornerCoordsAtPos(i - 1),  //NodeC
-                                                             gameData.getCornerRadiusAtPos(i));     //Radius
+                circlePositions[i] = calculateCirclePosition(gameData.getPlaceholderCoordsAtIndex(i),      //NodeA
+                                                             gameData.getPlaceholderCoordsAtIndex(0),      //NodeB
+                                                             gameData.getPlaceholderCoordsAtIndex(i - 1),  //NodeC
+                                                             gameData.getRadiusAtIndex(i));     //Radius
             }
             //if not at the start or end use adjacent nodes as B & C
             else
-            {;
-                circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
-                                                             gameData.getCornerCoordsAtPos(i + 1),  //NodeB
-                                                             gameData.getCornerCoordsAtPos(i - 1),  //NodeC
-                                                             gameData.getCornerRadiusAtPos(i));     //Radius
+            {
+                ;
+                circlePositions[i] = calculateCirclePosition(gameData.getPlaceholderCoordsAtIndex(i),      //NodeA
+                                                             gameData.getPlaceholderCoordsAtIndex(i + 1),  //NodeB
+                                                             gameData.getPlaceholderCoordsAtIndex(i - 1),  //NodeC
+                                                             gameData.getRadiusAtIndex(i));     //Radius
             }
             Debug.Log(circlePositions[i]);
         }

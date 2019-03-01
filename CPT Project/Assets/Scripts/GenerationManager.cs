@@ -183,10 +183,12 @@ public class GenerationManager : MonoBehaviour {
             tempCorners.Add(tempCorner);
         }
 
+        gameData.setCorners(tempCorners);
+
         // link these to gameData
-        gameData.setCornerCoords(hardCodeCoords);
-        gameData.setCornerOrder(hardCodeCornerOrder);
-        gameData.setCornerTurningDirection(hardCodeTurningDirection);
-        gameData.setCornerRadius(hardCodeCornerRadius);
+        //gameData.setCornerCoords(hardCodeCoords);
+        //gameData.setCornerOrder(hardCodeCornerOrder);
+        //gameData.setCornerTurningDirection(hardCodeTurningDirection);
+        //gameData.setCornerRadius(hardCodeCornerRadius);
     }
 }

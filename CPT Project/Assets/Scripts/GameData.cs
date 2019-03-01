@@ -26,7 +26,7 @@ public class GameData : MonoBehaviour {
     public List<Corner> getCornersAll() { return corners; }
     public Vector2 getPlaceholderCoordsAtIndex( int b) { return corners[b].getPlaceholderCoordinates(); }
     public int getIndexAtIndex(int c) { return corners[c].getIndex(); }
-    public double getRadiusAtIndex(int d) { return corners[d].getRadius(); }
+    public float getRadiusAtIndex(int d) { return corners[d].getRadius(); }
     public bool getDirectionAtIndex(int e) { return corners[e].getDiretcion(); }
     public Vector2 getFinalCoordinatesAtIndex(int f) { return corners[f].getFinalCoordinates(); }
 
@@ -63,7 +63,7 @@ public class GameData : MonoBehaviour {
     public void setCornerAtindex(int index, Corner b) { corners[index] = b; }
     public void setPlaceholderCoordsAtIndex(int index, Vector2 c) { corners[index].setPlaceholderCoordinates(c); }
     public void setIndexAtIndex(int index, int d) { corners[index].setIndex(d); }
-    public void setRadiusAtIndex (int index, double e) { corners[index].setRadius(e); }
+    public void setRadiusAtIndex (int index, float e) { corners[index].setRadius(e); }
     public void setDirectionAtIndex (int index, bool f) { corners[index].setDirection(f); }
     public void setFinalCoordinatesAtIndex(int index, Vector2 g) { corners[index].setFinalCoordinates(g); }
 
