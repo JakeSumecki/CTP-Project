@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class GameData : MonoBehaviour {
 
+    #region Private Variables
+
+    #region Generated Corner Variables
     private int amountOfCorners;
     private Vector2[] cornerCoords;
     private int[] cornerOrder;
     private bool[] cornerTurningDirection;
     private float[] cornerRadius;
+    #endregion
 
+    #region 
+    #endregion
 
-// -----------------GETTERS-----------------------//
+    #endregion
 
+    #region Getters
     public int getAmountOfCorners()
     {
         return amountOfCorners;
@@ -37,9 +44,9 @@ public class GameData : MonoBehaviour {
     {
         return cornerRadius[pos];
     }
+    #endregion
 
-// -----------------SETTERS-----------------------//
-
+    #region Setters
     public void setAmountOfCorners(int a)
     {
         amountOfCorners = a;
@@ -63,8 +70,7 @@ public class GameData : MonoBehaviour {
     public void setCornerRadius(float[] e)
     {
         cornerRadius = e;
-    }
-
-    // -----------------HARDCODED-STUFF-----------------------//
+    } 
+    #endregion
 
 }

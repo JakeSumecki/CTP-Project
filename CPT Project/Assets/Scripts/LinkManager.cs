@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class LinkManager : MonoBehaviour {
 
+    #region bools for inspector
     [SerializeField]
     private int specificCorner;
     [SerializeField]
@@ -16,18 +17,19 @@ public class LinkManager : MonoBehaviour {
     [SerializeField]
     bool closestPointB = false;
     [SerializeField]
-    private bool output = false;
+    private bool output = false; 
+    #endregion
 
     private GameData gameData;
 
-   // gameObject circle;
-
+    #region Variables
     Vector2 midPoint;
     Vector2 testLineEq;
     Vector2[] intersectionPoints;
     Vector2 circlePosFin;
 
-    Vector2[] circlePositions = new Vector2[50];
+    Vector2[] circlePositions = new Vector2[50]; 
+    #endregion
 
     // Use this for initialization
     void Start () {
@@ -63,7 +65,7 @@ public class LinkManager : MonoBehaviour {
         // loop through all corners
         for (int i = 0; i < gameData.getAmountOfCorners(); i++)
         {
-            //when at the start wont be able to acces NodeC as its the last in the array
+            //when at the start wont be able to access NodeC as its the last in the array
             if (i == 0)
             {
                 circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
@@ -78,7 +80,7 @@ public class LinkManager : MonoBehaviour {
             {
                 circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
                                                              gameData.getCornerCoordsAtPos(0),      //NodeB
-                                                             gameData.getCornerCoordsAtPos(i - 1),   //NodeC
+                                                             gameData.getCornerCoordsAtPos(i - 1),  //NodeC
                                                              gameData.getCornerRadiusAtPos(i));     //Radius
             }
             //if not at the start or end use adjacent nodes as B & C
@@ -86,14 +88,11 @@ public class LinkManager : MonoBehaviour {
             {;
                 circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
                                                              gameData.getCornerCoordsAtPos(i + 1),  //NodeB
-                                                             gameData.getCornerCoordsAtPos(i - 1),   //NodeC
+                                                             gameData.getCornerCoordsAtPos(i - 1),  //NodeC
                                                              gameData.getCornerRadiusAtPos(i));     //Radius
             }
-
             //Debug.Log(circlePositions[i]);
         }
-
-
     }
 
     /// <summary>
@@ -107,7 +106,6 @@ public class LinkManager : MonoBehaviour {
     private Vector2 calculateCirclePosition(Vector2 nodeA, Vector2 nodeB, Vector2 nodeC, float radius)
     {
         midPoint = calculateMidPoint(nodeB, nodeC);
-        //testLineEq = calculateLineEquation(nodeA, midPoint);
         intersectionPoints = findLineCircleIntersections(nodeA, radius, nodeA, midPoint);
         circlePosFin = checkIntersections(intersectionPoints[0], intersectionPoints[1], midPoint);
         //Instantiate(original, new Vector3(circlePosFin.x, 0.0f, circlePosFin.y), Quaternion rotation);
@@ -115,7 +113,82 @@ public class LinkManager : MonoBehaviour {
         return circlePosFin;
     }
 
-    //--------------------------Maths-Functions-------------------------//
+    #region Base Maths Funtcions
+
+    /// <summary>
+    /// calcualtes the mid-point of two coordinates. Possibly not needed anymore
+    /// </summary>
+    /// <param name="pos1"></param> first coordinates
+    /// <param name="pos2"></param> second coordinates
+    /// <returns>Coordinates of the Mid-Point of pos1 and pos2</returns>
+    private Vector2 calculateMidPoint(Vector2 pos1, Vector2 pos2)
+    {
+
+        Vector2 tempMidPoint;
+
+        tempMidPoint.x = (pos1.x + pos2.x) / 2;
+        tempMidPoint.y = (pos1.y + pos2.y) / 2;
+
+        return tempMidPoint;
+    }
+
+    /// <summary>
+    /// Calculate the distance between two positions
+    /// </summary>
+    /// <param name="pos1">Position 1</param>
+    /// <param name="pos2">Position 2</param>
+    /// <returns>Double</returns>
+    double calculateDistance(Vector2 pos1, Vector2 pos2)
+    {
+        //                                    _______________________
+        // Distance formula: Distance = Sqrt /(x2-x1)^2 + (y2 - y1)^2
+        double answer = Math.Sqrt(
+                                ((pos1.x - pos2.x) * (pos1.x - pos2.x))        //(x2 - x1)^2
+                                                      +                             //          +
+                                ((pos1.y - pos2.y) * (pos1.y - pos2.y)));     //(y2 - y1)^2
+
+        return answer;
+
+    }
+
+    /// <summary>
+    /// Converts degrees to radians for use in Math.Sin()
+    /// </summary>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public double convertToRadians(double angle)
+    {
+        return (Math.PI / 180) * angle;
+    }
+
+    /// <summary>
+    /// NOT USED IN CURRENT BUILD
+    /// Calculates the angle of three coordinates. The Second position is the angle found
+    /// </summary>
+    /// <param name="pos1">First Coordinate</param>
+    /// <param name="pos2">Second Coordinate</param>
+    /// <param name="pos3">Third Coordinate</param>
+    /// <returns></returns>
+    private double calculateAngle(Vector2 pos1, Vector2 pos2, Vector2 pos3)
+    {
+        double a = pos2.x - pos1.x;
+        double b = pos2.y - pos1.y;
+        double c = pos3.x - pos2.x;
+        double d = pos3.y - pos2.y;
+
+        double atanA = Math.Atan2(a, b);
+        double atanB = Math.Atan2(c, d);
+
+        double answer = (atanA - atanB) * (-180 / Math.PI);
+
+        // make it positive
+        answer = makePositive(answer);
+
+        return answer;
+    }
+    #endregion
+
+    #region Phase 1 Math Funtcions
 
     /// <summary>
     /// Checks which intersection point is closest to the mid-point.
@@ -204,171 +277,7 @@ public class LinkManager : MonoBehaviour {
 
             return intersections;
         }
-    }
-
-    /// <summary>
-    /// Calculate the distance between two positions
-    /// </summary>
-    /// <param name="pos1">Position 1</param>
-    /// <param name="pos2">Position 2</param>
-    /// <returns>Double</returns>
-    double calculateDistance(Vector2 pos1, Vector2 pos2)
-    {
-        //                                    _______________________
-        // Distance formula: Distance = Sqrt /(x2-x1)^2 + (y2 - y1)^2
-        double answer = Math.Sqrt(
-                                ((pos1.x - pos2.x) * (pos1.x - pos2.x))        //(x2 - x1)^2
-                                                      +                             //          +
-                                ((pos1.y - pos2.y) * (pos1.y - pos2.y)));     //(y2 - y1)^2
-
-        return answer;
-
-    }
-
-    /// <summary>
-    /// Calculate point D where point D is where point A intersects line BC at a right angle
-    /// </summary>
-    /// <param name="nodeA">Current Node</param>
-    /// <param name="nodeB">Next Node</param>
-    /// <param name="nodeC">Previous Node</param>
-    /// <returns>Vector2 of the coordinates of point D</returns>
-    Vector2 calculatePointDFromABC(Vector2 nodeA, Vector2 nodeB, Vector2 nodeC)
-    {
-        double answerX;
-        double answerY;
-
-        Vector2 answer;
-        Vector2 XCoords;
-
-        // angle ADC = 90
-        double angleDCA = calculateAngle(nodeB, nodeC, nodeA);
-        double angleCAD = findLastAngleInTriangle(angleDCA, 90f);
-
-        double sideAC = calculateDistance(nodeA, nodeC);
-        double sideAD = calculateSideAAS(angleDCA, 90f, sideAC);
-        double sideCD = calculateSideAAS(angleCAD, angleDCA, sideAD);
-        Debug.Log(sideAD);
-        Debug.Log(sideCD);
-        Debug.Log(sideAC);
-
-        //       AB^2 + AC^2 - BC^2     |              ___________
-        //  Cy = -------------------    |   Cx = (+-) /AC^2 - Cy^2
-        //             2AB              |              
-
-        //answerY = ((sideAD * sideAD) + (sideAC * sideAC) - (sideCD * sideCD)) / (2 * sideAD);
-        answerY = ((sideAC * sideAC) + (sideCD * sideCD) - (sideAD * sideAD)) / (2 * sideAC);
-        answerX = Math.Sqrt((sideAC * sideAC) - (answerY * answerY));
-
-        //Debug.Log(answerX + " : " + answerY);
-        Debug.Log(answerY);
-
-        //answer.y = ((sideAD * sideAD) + (sideAC * sideAC) - (sideCD * sideCD)) / 2 * sideAD;
-        //XCoords = Math.Sqrt((sideAC * sideAC) - (answer.y * answer.y));
-
-
-        return Vector2.zero;
-    }
-
-    /// <summary>
-    /// Calculates the size of a side with two angles and a side (AAS)
-    /// </summary>
-    /// <param name="angleA">Angle opposite side wanted</param>
-    /// <param name="angleB">Angle opposite another side</param>
-    /// <param name="sideB">Side of the other angle</param>
-    /// <returns></returns>
-    private double calculateSideAAS(double angleA, double angleB, double sideB)
-    {
-        double answer = (sideB * Math.Sin(convertToRadians(angleA))) / Math.Sin(convertToRadians(angleB));
-        answer = makePositive(answer);
-        return answer;
-    }
-
-    /// <summary>
-    /// Calculates the angle of three coordinates. The Second position is the angle found
-    /// </summary>
-    /// <param name="pos1">First Coordinate</param>
-    /// <param name="pos2">Second Coordinate</param>
-    /// <param name="pos3">Third Coordinate</param>
-    /// <returns></returns>
-    private double calculateAngle(Vector2 pos1, Vector2 pos2, Vector2 pos3)
-    {
-        double a = pos2.x - pos1.x;
-        double b = pos2.y - pos1.y;
-        double c = pos3.x - pos2.x;
-        double d = pos3.y - pos2.y;
-
-        double atanA = Math.Atan2(a, b);
-        double atanB = Math.Atan2(c, d);
-
-        double answer = (atanA - atanB) * (-180 / Math.PI);
-
-        // make it positive
-        answer = makePositive(answer);
-
-        return answer;
-    }
-
-    /// <summary>
-    /// Calculates the equation of a line. 
-    /// </summary>
-    /// <param name="pos1">First Coordinate</param>
-    /// <param name="pos2">Second Coordinate</param>
-    /// <returns> Line's Gradient & Y-Intercept</returns>
-    private Vector2 calculateLineEquation(Vector2 pos1, Vector2 pos2)
-    {
-        // works, tested
-        float gradient = (pos2.y - pos1.y) / (pos2.x - pos1.x);
-        // works, tested
-        float yIntercept = pos1.y - (gradient * pos1.x);
-
-        Vector2 lineEquation;
-
-        lineEquation.x = gradient;
-        lineEquation.y = yIntercept;
-
-        return lineEquation;
-    }
-
-    /// <summary>
-    /// calcualtes the mid-point of two coordinates. Possibly not needed anymore
-    /// </summary>
-    /// <param name="pos1"></param> first coordinates
-    /// <param name="pos2"></param> second coordinates
-    /// <returns>Coordinates of the Mid-Point of pos1 and pos2</returns>
-    private Vector2 calculateMidPoint(Vector2 pos1, Vector2 pos2)
-    {
-
-        Vector2 tempMidPoint;
-
-        tempMidPoint.x = (pos1.x + pos2.x) / 2;
-        tempMidPoint.y = (pos1.y + pos2.y) / 2;
-
-        return tempMidPoint;
-    }
-
-    /// <summary>
-    /// Converts degrees to radians for use in Math.Sin()
-    /// </summary>
-    /// <param name="angle"></param>
-    /// <returns></returns>
-    public double convertToRadians(double angle)
-    {
-        return (Math.PI / 180) * angle;
-    }
-
-    /// <summary>
-    /// Takes two andles in a triangle and returns the last one in degrees
-    /// </summary>
-    /// <param name="angle1">First angle</param>
-    /// <param name="angle2">Second angle</param>
-    /// <returns></returns>
-    private double findLastAngleInTriangle(double angle1, double angle2)
-    {
-
-        double answer = 180 - angle1 - angle2;
-
-        return answer;
-    }
+    }    
 
     /// <summary>
     /// Takes a number and makes it positive
@@ -381,12 +290,22 @@ public class LinkManager : MonoBehaviour {
         return answer;
     }
 
-    //----------------TEST
-
-    //      IMPORTANT! MIGHT NEED TO ADD ANOTHER FUNCTION FOR THIS TO WORK (FindTangents)
-
-    // Find the tangent points for these two circles.
-    // Return the number of tangents: 4, 2, or 0.
+    /// <summary>
+    /// Find the tangent points for these two circles.
+    /// </summary>
+    /// <param name="c1"></param>
+    /// <param name="radius1"></param>
+    /// <param name="c2"></param>
+    /// <param name="radius2"></param>
+    /// <param name="outer1_p1"></param>
+    /// <param name="outer1_p2"></param>
+    /// <param name="outer2_p1"></param>
+    /// <param name="outer2_p2"></param>
+    /// <param name="inner1_p1"></param>
+    /// <param name="inner1_p2"></param>
+    /// <param name="inner2_p1"></param>
+    /// <param name="inner2_p2"></param>
+    /// <returns>Return the number of tangents: 4, 2, or 0.</returns>
     private int FindCircleCircleTangents(
         Vector2 c1, float radius1, Vector2 c2, float radius2,
         out Vector2 outer1_p1, out Vector2 outer1_p2,
@@ -591,8 +510,9 @@ public class LinkManager : MonoBehaviour {
         }
     }
 
+    #endregion
 
-
+    #region Debug Stuff
     /// <summary>
     /// Used to output data to Unity's debugger
     /// </summary>
@@ -627,5 +547,108 @@ public class LinkManager : MonoBehaviour {
         }
         return;
     }
+    #endregion
+
+    #region Redundant Math Funtcions
+
+    /// <summary>
+    /// NOT USED IN CURRENT BUILD
+    /// Calculates the equation of a line. 
+    /// </summary>
+    /// <param name="pos1">First Coordinate</param>
+    /// <param name="pos2">Second Coordinate</param>
+    /// <returns> Line's Gradient & Y-Intercept</returns>
+    private Vector2 calculateLineEquation(Vector2 pos1, Vector2 pos2)
+    {
+        // works, tested
+        float gradient = (pos2.y - pos1.y) / (pos2.x - pos1.x);
+        // works, tested
+        float yIntercept = pos1.y - (gradient * pos1.x);
+
+        Vector2 lineEquation;
+
+        lineEquation.x = gradient;
+        lineEquation.y = yIntercept;
+
+        return lineEquation;
+    }
+
+    /// <summary>
+    /// NOT USED IN CURRENT BUILD
+    /// Calculate point D where point D is where point A intersects line BC at a right angle
+    /// </summary>
+    /// <param name="nodeA">Current Node</param>
+    /// <param name="nodeB">Next Node</param>
+    /// <param name="nodeC">Previous Node</param>
+    /// <returns>Vector2 of the coordinates of point D</returns>
+    Vector2 calculatePointDFromABC(Vector2 nodeA, Vector2 nodeB, Vector2 nodeC)
+    {
+        double answerX;
+        double answerY;
+
+        Vector2 answer;
+        Vector2 XCoords;
+
+        // angle ADC = 90
+        double angleDCA = calculateAngle(nodeB, nodeC, nodeA);
+        double angleCAD = findLastAngleInTriangle(angleDCA, 90f);
+
+        double sideAC = calculateDistance(nodeA, nodeC);
+        double sideAD = calculateSideAAS(angleDCA, 90f, sideAC);
+        double sideCD = calculateSideAAS(angleCAD, angleDCA, sideAD);
+        Debug.Log(sideAD);
+        Debug.Log(sideCD);
+        Debug.Log(sideAC);
+
+        //       AB^2 + AC^2 - BC^2     |              ___________
+        //  Cy = -------------------    |   Cx = (+-) /AC^2 - Cy^2
+        //             2AB              |              
+
+        //answerY = ((sideAD * sideAD) + (sideAC * sideAC) - (sideCD * sideCD)) / (2 * sideAD);
+        answerY = ((sideAC * sideAC) + (sideCD * sideCD) - (sideAD * sideAD)) / (2 * sideAC);
+        answerX = Math.Sqrt((sideAC * sideAC) - (answerY * answerY));
+
+        //Debug.Log(answerX + " : " + answerY);
+        Debug.Log(answerY);
+
+        //answer.y = ((sideAD * sideAD) + (sideAC * sideAC) - (sideCD * sideCD)) / 2 * sideAD;
+        //XCoords = Math.Sqrt((sideAC * sideAC) - (answer.y * answer.y));
+
+
+        return Vector2.zero;
+    }
+
+    /// <summary>
+    /// NOT USED IN CURRENT BUILD
+    /// Calculates the size of a side with two angles and a side (AAS)
+    /// </summary>
+    /// <param name="angleA">Angle opposite side wanted</param>
+    /// <param name="angleB">Angle opposite another side</param>
+    /// <param name="sideB">Side of the other angle</param>
+    /// <returns></returns>
+    private double calculateSideAAS(double angleA, double angleB, double sideB)
+    {
+        double answer = (sideB * Math.Sin(convertToRadians(angleA))) / Math.Sin(convertToRadians(angleB));
+        answer = makePositive(answer);
+        return answer;
+    }
+    
+    /// <summary>
+    /// NOT USED IN CURRENT BUILD
+    /// Takes two andles in a triangle and returns the last one in degrees
+    /// </summary>
+    /// <param name="angle1">First angle</param>
+    /// <param name="angle2">Second angle</param>
+    /// <returns></returns>
+    private double findLastAngleInTriangle(double angle1, double angle2)
+    {
+
+        double answer = 180 - angle1 - angle2;
+
+        return answer;
+    }
+
+    #endregion
 }
+
 
