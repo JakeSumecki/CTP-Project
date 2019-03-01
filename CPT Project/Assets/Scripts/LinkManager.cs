@@ -22,6 +22,9 @@ public class LinkManager : MonoBehaviour {
 
     private GameData gameData;
 
+    // might want to move this, bit hacky
+    List<Straight> tempStraights = new List<Straight>();
+
     #region Variables
     Vector2 midPoint;
     Vector2 testLineEq;
@@ -37,96 +40,94 @@ public class LinkManager : MonoBehaviour {
         // link gameData
         gameData = GameObject.FindObjectOfType<GameData>();
 
-        Vector2 o11, o12, o21, o22, i11, i12, i21, i22;
+        #region TestArea
+        //Vector2 o11, o12, o21, o22, i11, i12, i21, i22;
 
-        FindCircleCircleTangents(new Vector2(0.0f,0.0f), 5.0f, new Vector2(11.0f, 0.0f), 
-             5.0f, out o11, out o12, out o21, out o22, out i11, out i12, out i21, out i22);
+        //FindCircleCircleTangents(new Vector2(0.0f, 0.0f), 1.0f, new Vector2(0.0f, -3.0f), 1.0f,
+        //              out o11, out o12, out o21, out o22, out i11, out i12, out i21, out i22);
+        //Debug.Log(o11 + "|" + o12);
+        ////Debug.Log(o21 + "|" + o22);
+        ////Debug.Log(i11 + "|" + i12);
+        ////Debug.Log(i21 + "|" + i22); 
+        #endregion
 
-
-        //calculatePointDFromABC(new Vector2(6f,6f), new Vector2(12f,0f), new Vector2(0f,0f));
+        
 
         createCirclesFromPlaceholderCoordinates();
+        createStraightsFromCircleTangents();
+
 
     }
 
-    // Update is called once per frame
-    void Update () {
-
-        runOutput();
-
-    }
 
     /// <summary>
-    /// Creates the circles
+    /// Creates the circles and stores the coordinates in gameData
     /// </summary>
     void createCirclesFromPlaceholderCoordinates()
     {
-
-        //// loop through all corners
-        //for (int i = 0; i < gameData.getAmountOfCorners(); i++)
-        //{
-        //    //when at the start wont be able to access NodeC as its the last in the array
-        //    if (i == 0)
-        //    {
-        //        circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
-        //                                                     gameData.getCornerCoordsAtPos(i + 1),  //NodeB
-        //                                                     gameData.getCornerCoordsAtPos(gameData.getAmountOfCorners() - 1),   //NodeC
-        //                                                     gameData.getCornerRadiusAtPos(i));     //Radius
-
-        //    }
-
-        //    //when at the end wont be able to access NodeB because its at the start
-        //    else if (i == gameData.getAmountOfCorners() - 1)
-        //    {
-        //        circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
-        //                                                     gameData.getCornerCoordsAtPos(0),      //NodeB
-        //                                                     gameData.getCornerCoordsAtPos(i - 1),  //NodeC
-        //                                                     gameData.getCornerRadiusAtPos(i));     //Radius
-        //    }
-        //    //if not at the start or end use adjacent nodes as B & C
-        //    else
-        //    {;
-        //        circlePositions[i] = calculateCirclePosition(gameData.getCornerCoordsAtPos(i),      //NodeA
-        //                                                     gameData.getCornerCoordsAtPos(i + 1),  //NodeB
-        //                                                     gameData.getCornerCoordsAtPos(i - 1),  //NodeC
-        //                                                     gameData.getCornerRadiusAtPos(i));     //Radius
-        //    }
-        //    Debug.Log(circlePositions[i]);
-        //}
         // loop through all corners
         for (int i = 0; i < gameData.getAmountOfCorners(); i++)
         {
             //when at the start wont be able to access NodeC as its the last in the array
             if (i == 0)
             {
-                circlePositions[i] = calculateCirclePosition(gameData.getPlaceholderCoordsAtIndex(i),      //NodeA
-                                                             gameData.getPlaceholderCoordsAtIndex(i + 1),  //NodeB
+                circlePositions[i] = calculateCirclePosition(gameData.getPlaceholderCoordsAtIndex(i),                                   //NodeA
+                                                             gameData.getPlaceholderCoordsAtIndex(i + 1),                               //NodeB
                                                              gameData.getPlaceholderCoordsAtIndex(gameData.getAmountOfCorners() - 1),   //NodeC
-                                                             gameData.getRadiusAtIndex(i));     //Radius
+                                                             gameData.getRadiusAtIndex(i));                                             //Radius
 
             }
 
             //when at the end wont be able to access NodeB because its at the start
             else if (i == gameData.getAmountOfCorners() - 1)
             {
-                circlePositions[i] = calculateCirclePosition(gameData.getPlaceholderCoordsAtIndex(i),      //NodeA
-                                                             gameData.getPlaceholderCoordsAtIndex(0),      //NodeB
-                                                             gameData.getPlaceholderCoordsAtIndex(i - 1),  //NodeC
-                                                             gameData.getRadiusAtIndex(i));     //Radius
+                circlePositions[i] = calculateCirclePosition(gameData.getPlaceholderCoordsAtIndex(i),       //NodeA
+                                                             gameData.getPlaceholderCoordsAtIndex(0),       //NodeB
+                                                             gameData.getPlaceholderCoordsAtIndex(i - 1),   //NodeC
+                                                             gameData.getRadiusAtIndex(i));                 //Radius
             }
             //if not at the start or end use adjacent nodes as B & C
             else
             {
                 ;
-                circlePositions[i] = calculateCirclePosition(gameData.getPlaceholderCoordsAtIndex(i),      //NodeA
-                                                             gameData.getPlaceholderCoordsAtIndex(i + 1),  //NodeB
-                                                             gameData.getPlaceholderCoordsAtIndex(i - 1),  //NodeC
-                                                             gameData.getRadiusAtIndex(i));     //Radius
+                circlePositions[i] = calculateCirclePosition(gameData.getPlaceholderCoordsAtIndex(i),       //NodeA
+                                                             gameData.getPlaceholderCoordsAtIndex(i + 1),   //NodeB
+                                                             gameData.getPlaceholderCoordsAtIndex(i - 1),   //NodeC
+                                                             gameData.getRadiusAtIndex(i));                 //Radius
             }
-            Debug.Log(circlePositions[i]);
+
+            // put final positions into gameData
+            gameData.setFinalCoordinatesAtIndex(i, circlePositions[i]);
+            //Debug.Log(gameData.getFinalCoordinatesAtIndex(i));
         }
     }
 
+    /// <summary>
+    /// Creates the tracks straights from the tangents of the circles
+    /// </summary>
+    void createStraightsFromCircleTangents()
+    {
+        // loop through straight (amount of corners == amount of straights) 
+        for (int i = 0; i < gameData.getAmountOfCorners(); i++)
+        {
+            //when at the end it wont be able to access the first corner
+            if (i == gameData.getAmountOfCorners() - 1)
+            {
+                //calculate the tangents between the last and first corner
+                calculateCorrectTangent(gameData.getCornerAtIndex(i), gameData.getCornerAtIndex(0));
+            }
+            else
+            {
+                // calculate the tangents between the current corner and the next
+                calculateCorrectTangent(gameData.getCornerAtIndex(i), gameData.getCornerAtIndex(i+1));
+            }
+        }
+    }
+
+   
+
+    #region Ancillary Functions
+    #region Funtcions for Placing Circles 
     /// <summary>
     /// Calculates the circle positions and stores the positions in a Vector2 array in GameData
     /// </summary>
@@ -144,83 +145,6 @@ public class LinkManager : MonoBehaviour {
 
         return circlePosFin;
     }
-
-    #region Base Maths Funtcions
-
-    /// <summary>
-    /// calcualtes the mid-point of two coordinates. Possibly not needed anymore
-    /// </summary>
-    /// <param name="pos1"></param> first coordinates
-    /// <param name="pos2"></param> second coordinates
-    /// <returns>Coordinates of the Mid-Point of pos1 and pos2</returns>
-    private Vector2 calculateMidPoint(Vector2 pos1, Vector2 pos2)
-    {
-
-        Vector2 tempMidPoint;
-
-        tempMidPoint.x = (pos1.x + pos2.x) / 2;
-        tempMidPoint.y = (pos1.y + pos2.y) / 2;
-
-        return tempMidPoint;
-    }
-
-    /// <summary>
-    /// Calculate the distance between two positions
-    /// </summary>
-    /// <param name="pos1">Position 1</param>
-    /// <param name="pos2">Position 2</param>
-    /// <returns>Double</returns>
-    double calculateDistance(Vector2 pos1, Vector2 pos2)
-    {
-        //                                    _______________________
-        // Distance formula: Distance = Sqrt /(x2-x1)^2 + (y2 - y1)^2
-        double answer = Math.Sqrt(
-                                ((pos1.x - pos2.x) * (pos1.x - pos2.x))        //(x2 - x1)^2
-                                                      +                             //          +
-                                ((pos1.y - pos2.y) * (pos1.y - pos2.y)));     //(y2 - y1)^2
-
-        return answer;
-
-    }
-
-    /// <summary>
-    /// Converts degrees to radians for use in Math.Sin()
-    /// </summary>
-    /// <param name="angle"></param>
-    /// <returns></returns>
-    public double convertToRadians(double angle)
-    {
-        return (Math.PI / 180) * angle;
-    }
-
-    /// <summary>
-    /// NOT USED IN CURRENT BUILD
-    /// Calculates the angle of three coordinates. The Second position is the angle found
-    /// </summary>
-    /// <param name="pos1">First Coordinate</param>
-    /// <param name="pos2">Second Coordinate</param>
-    /// <param name="pos3">Third Coordinate</param>
-    /// <returns></returns>
-    private double calculateAngle(Vector2 pos1, Vector2 pos2, Vector2 pos3)
-    {
-        double a = pos2.x - pos1.x;
-        double b = pos2.y - pos1.y;
-        double c = pos3.x - pos2.x;
-        double d = pos3.y - pos2.y;
-
-        double atanA = Math.Atan2(a, b);
-        double atanB = Math.Atan2(c, d);
-
-        double answer = (atanA - atanB) * (-180 / Math.PI);
-
-        // make it positive
-        answer = makePositive(answer);
-
-        return answer;
-    }
-    #endregion
-
-    #region Phase 1 Math Funtcions
 
     /// <summary>
     /// Checks which intersection point is closest to the mid-point.
@@ -309,26 +233,95 @@ public class LinkManager : MonoBehaviour {
 
             return intersections;
         }
-    }    
+    }
+    #endregion
 
+    #region Funtcions for Tanget Calculation
     /// <summary>
-    /// Takes a number and makes it positive
+    /// Calculates the correct tangent to use
     /// </summary>
-    /// <param name="number"></param>
-    /// <returns></returns>
-    private double makePositive(double number)
+    /// <param name="corner1"></param>
+    /// <param name="corner2"></param>
+    void calculateCorrectTangent(Corner corner1, Corner corner2)
     {
-        double answer = Math.Sqrt(number * number);
-        return answer;
+        int tangentSelector = -1;
+        Vector2 o11, o12, o21, o22, i11, i12, i21, i22;
+
+        Straight tempStraight = new Straight();
+
+
+        #region circleDirectionLogic
+        //Tangent when both directions are positive (outer tangent 1) pretty sure
+        if (corner1.getDiretcion() == true && corner2.getDiretcion() == true)
+        {
+            tangentSelector = 1;
+        }
+        //Tangent when both directions are negative (outer tangent 2)
+        else if (corner1.getDiretcion() == false && corner2.getDiretcion() == false)
+        {
+            tangentSelector = 2;
+        }
+        // Tangent when 1 positive and 2 is negative (not figured out)
+        else if (corner1.getDiretcion() == true && corner2.getDiretcion() == false)
+        {
+            tangentSelector = 3;
+        }
+        // Tangent when 1 negative and 2 is positive (not figured out)
+        else if (corner1.getDiretcion() == false && corner2.getDiretcion() == true)
+        {
+            tangentSelector = 4;
+        }
+        #endregion
+
+        FindCircleCircleTangents(new Vector2(0.0f, 0.0f), 1.0f, new Vector2(3.0f, 0.0f), 1.0f,
+                      out o11, out o12, out o21, out o22, out i11, out i12, out i21, out i22);
+
+        // select which tangents to use and then 
+        switch (tangentSelector)
+        {
+            // both circle's directions are positive - outer tangent 1
+            case 1:
+                tempStraight.setPos1(o11);
+                tempStraight.setPos2(o12);
+                tempStraight.setAngle(1f);  // needs actually calculating. currently using for debugging
+                break;
+
+            // both circle's directions are negative - outer tangent 2
+            case 2:
+                tempStraight.setPos1(Vector2.zero);
+                tempStraight.setPos2(Vector2.zero);
+                tempStraight.setAngle(2f);
+                break;
+
+            // circle 1 positive, circle 2 negative
+            case 3:
+                tempStraight.setPos1(Vector2.zero);
+                tempStraight.setPos2(Vector2.zero);
+                tempStraight.setAngle(3f);
+                break;
+
+            // circle 1 negative, circle 2 positive
+            case 4:
+                tempStraight.setPos1(Vector2.zero);
+                tempStraight.setPos2(Vector2.zero);
+                tempStraight.setAngle(4f);
+                break;
+        }
+
+        Debug.Log(tempStraight.getAngle());
+        Debug.Log(tempStraight.getPos1());
+        Debug.Log(tempStraight.getPos2());
+        tempStraights.Add(tempStraight);
+
     }
 
     /// <summary>
     /// Find the tangent points for these two circles.
     /// </summary>
-    /// <param name="c1"></param>
-    /// <param name="radius1"></param>
-    /// <param name="c2"></param>
-    /// <param name="radius2"></param>
+    /// <param name="c1">Circle 1 position</param>
+    /// <param name="radius1">Circle 1 radius</param>
+    /// <param name="c2">circle 2 position</param>
+    /// <param name="radius2">Circle 2 Radius </param>
     /// <param name="outer1_p1"></param>
     /// <param name="outer1_p2"></param>
     /// <param name="outer2_p1"></param>
@@ -338,12 +331,9 @@ public class LinkManager : MonoBehaviour {
     /// <param name="inner2_p1"></param>
     /// <param name="inner2_p2"></param>
     /// <returns>Return the number of tangents: 4, 2, or 0.</returns>
-    private int FindCircleCircleTangents(
-        Vector2 c1, float radius1, Vector2 c2, float radius2,
-        out Vector2 outer1_p1, out Vector2 outer1_p2,
-        out Vector2 outer2_p1, out Vector2 outer2_p2,
-        out Vector2 inner1_p1, out Vector2 inner1_p2,
-        out Vector2 inner2_p1, out Vector2 inner2_p2)
+    private int FindCircleCircleTangents(Vector2 c1, float radius1, Vector2 c2, float radius2,
+        out Vector2 outer1_p1, out Vector2 outer1_p2,out Vector2 outer2_p1, out Vector2 outer2_p2,
+        out Vector2 inner1_p1, out Vector2 inner1_p2,out Vector2 inner2_p1, out Vector2 inner2_p2)
     {
         // Make sure radius1 <= radius2.
         if (radius1 > radius2)
@@ -450,10 +440,54 @@ public class LinkManager : MonoBehaviour {
 
         return 4;
     }
+    #endregion
 
-    // Find the tangent points for this circle and external point.
-    // Return true if we find the tangents, false if the point is
-    // inside the circle.
+    #region Base Maths Funtcions
+
+    /// <summary>
+    /// calcualtes the mid-point of two coordinates. Possibly not needed anymore
+    /// </summary>
+    /// <param name="pos1"></param> first coordinates
+    /// <param name="pos2"></param> second coordinates
+    /// <returns>Coordinates of the Mid-Point of pos1 and pos2</returns>
+    private Vector2 calculateMidPoint(Vector2 pos1, Vector2 pos2)
+    {
+
+        Vector2 tempMidPoint;
+
+        tempMidPoint.x = (pos1.x + pos2.x) / 2;
+        tempMidPoint.y = (pos1.y + pos2.y) / 2;
+
+        return tempMidPoint;
+    }
+
+    /// <summary>
+    /// Calculate the distance between two positions
+    /// </summary>
+    /// <param name="pos1">Position 1</param>
+    /// <param name="pos2">Position 2</param>
+    /// <returns>Double</returns>
+    double calculateDistance(Vector2 pos1, Vector2 pos2)
+    {
+        //                                    _______________________
+        // Distance formula: Distance = Sqrt /(x2-x1)^2 + (y2 - y1)^2
+        double answer = Math.Sqrt(
+                                ((pos1.x - pos2.x) * (pos1.x - pos2.x))        //(x2 - x1)^2
+                                                      +                             //          +
+                                ((pos1.y - pos2.y) * (pos1.y - pos2.y)));     //(y2 - y1)^2
+        return answer;
+    }
+
+    /// <summary>
+    /// Find the tangent points for this circle and external point. Return true if we find the tangents, 
+    /// false if the point is inside the circle.
+    /// </summary>
+    /// <param name="center"></param>
+    /// <param name="radius"></param>
+    /// <param name="external_point"></param>
+    /// <param name="pt1"></param>
+    /// <param name="pt2"></param>
+    /// <returns></returns>
     private bool FindTangents(Vector2 center, float radius,
         Vector2 external_point, out Vector2 pt1, out Vector2 pt2)
     {
@@ -485,10 +519,8 @@ public class LinkManager : MonoBehaviour {
     }
 
     // Find the points where the two circles intersect.
-    private int FindCircleCircleIntersections(
-        float cx0, float cy0, float radius0,
-        float cx1, float cy1, float radius1,
-        out Vector2 intersection1, out Vector2 intersection2)
+    private int FindCircleCircleIntersections(float cx0, float cy0, float radius0, float cx1, float cy1, float radius1,
+                                              out Vector2 intersection1, out Vector2 intersection2)
     {
         // Find the distance between the centers.
         float dx = cx0 - cx1;
@@ -541,7 +573,6 @@ public class LinkManager : MonoBehaviour {
             return 2;
         }
     }
-
     #endregion
 
     #region Debug Stuff
@@ -582,6 +613,31 @@ public class LinkManager : MonoBehaviour {
     #endregion
 
     #region Redundant Math Funtcions
+    /// <summary>
+    /// NOT USED IN CURRENT BUILD
+    /// Calculates the angle of three coordinates. The Second position is the angle found
+    /// </summary>
+    /// <param name="pos1">First Coordinate</param>
+    /// <param name="pos2">Second Coordinate</param>
+    /// <param name="pos3">Third Coordinate</param>
+    /// <returns></returns>
+    private double calculateAngle(Vector2 pos1, Vector2 pos2, Vector2 pos3)
+    {
+        double a = pos2.x - pos1.x;
+        double b = pos2.y - pos1.y;
+        double c = pos3.x - pos2.x;
+        double d = pos3.y - pos2.y;
+
+        double atanA = Math.Atan2(a, b);
+        double atanB = Math.Atan2(c, d);
+
+        double answer = (atanA - atanB) * (-180 / Math.PI);
+
+        // make it positive
+        answer = makePositive(answer);
+
+        return answer;
+    }
 
     /// <summary>
     /// NOT USED IN CURRENT BUILD
@@ -680,7 +736,35 @@ public class LinkManager : MonoBehaviour {
         return answer;
     }
 
+    /// <summary>
+    /// NOT USED IN CURRENT BUILD
+    /// Takes a number and makes it positive
+    /// </summary>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    private double makePositive(double number)
+    {
+        double answer = Math.Sqrt(number * number);
+        return answer;
+    }
+
+    /// <summary>
+    /// NOT USED IN CURRENT BUILD
+    /// Converts degrees to radians for use in Math.Sin()
+    /// </summary>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public double convertToRadians(double angle)
+    {
+        return (Math.PI / 180) * angle;
+    }
     #endregion
+    #endregion
+
+    void Update()
+    {
+        runOutput();
+    }
 }
 
 

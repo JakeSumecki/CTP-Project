@@ -35,7 +35,6 @@ public class GenerationManager : MonoBehaviour {
 
         hardcodedData();
 
-
     }
 
     // Update is called once per frame
@@ -169,6 +168,7 @@ public class GenerationManager : MonoBehaviour {
 
         List<Corner> tempCorners = new List<Corner>();
 
+        //put hard coded data into a list of corners
         for (int i = 0; i < numberOfCorners; i++)
         {
             Corner tempCorner = new Corner();
@@ -183,12 +183,8 @@ public class GenerationManager : MonoBehaviour {
             tempCorners.Add(tempCorner);
         }
 
+        // send list of corners to gameData
         gameData.setCorners(tempCorners);
 
-        // link these to gameData
-        //gameData.setCornerCoords(hardCodeCoords);
-        //gameData.setCornerOrder(hardCodeCornerOrder);
-        //gameData.setCornerTurningDirection(hardCodeTurningDirection);
-        //gameData.setCornerRadius(hardCodeCornerRadius);
     }
 }
