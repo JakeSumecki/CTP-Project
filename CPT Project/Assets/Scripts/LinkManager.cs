@@ -20,6 +20,7 @@ public class LinkManager : MonoBehaviour {
     private bool output = false; 
     #endregion
 
+    // local version of gameData
     private GameData gameData;
 
     // might want to move this, bit hacky
@@ -37,7 +38,7 @@ public class LinkManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-        // link gameData
+        // init gameData
         gameData = GameObject.FindObjectOfType<GameData>();
 
         #region TestArea
@@ -51,8 +52,6 @@ public class LinkManager : MonoBehaviour {
         ////Debug.Log(i21 + "|" + i22); 
         #endregion
 
-        
-
         createCirclesFromPlaceholderCoordinates();
         createStraightsFromCircleTangents();
 
@@ -62,9 +61,11 @@ public class LinkManager : MonoBehaviour {
 
     /// <summary>
     /// Creates the circles and stores the coordinates in gameData
+    /// Tested. Only thing that needs addressing is the point used to find the intersection points is wroing-ish (works for now).
     /// </summary>
     void createCirclesFromPlaceholderCoordinates()
     {
+
         // loop through all corners
         for (int i = 0; i < gameData.getAmountOfCorners(); i++)
         {
@@ -89,7 +90,7 @@ public class LinkManager : MonoBehaviour {
             //if not at the start or end use adjacent nodes as B & C
             else
             {
-                ;
+                
                 circlePositions[i] = calculateCirclePosition(gameData.getPlaceholderCoordsAtIndex(i),       //NodeA
                                                              gameData.getPlaceholderCoordsAtIndex(i + 1),   //NodeB
                                                              gameData.getPlaceholderCoordsAtIndex(i - 1),   //NodeC
@@ -125,7 +126,6 @@ public class LinkManager : MonoBehaviour {
     }
 
    
-
     #region Ancillary Functions
     #region Funtcions for Placing Circles 
     /// <summary>
@@ -139,7 +139,7 @@ public class LinkManager : MonoBehaviour {
     private Vector2 calculateCirclePosition(Vector2 nodeA, Vector2 nodeB, Vector2 nodeC, float radius)
     {
         midPoint = calculateMidPoint(nodeB, nodeC);
-        intersectionPoints = findLineCircleIntersections(nodeA, radius, nodeA, midPoint);
+        intersectionPoints = findLineCircleIntersections(nodeA, radius, nodeA, midPoint); // midpoint is the wrong point to use. Need a point on line of reflection
         circlePosFin = checkIntersections(intersectionPoints[0], intersectionPoints[1], midPoint);
         //Instantiate(original, new Vector3(circlePosFin.x, 0.0f, circlePosFin.y), Quaternion rotation);
 
@@ -273,10 +273,13 @@ public class LinkManager : MonoBehaviour {
         }
         #endregion
 
-        FindCircleCircleTangents(new Vector2(0.0f, 0.0f), 1.0f, new Vector2(3.0f, 0.0f), 1.0f,
+        Debug.Log("Corner 1 :" + corner1.getFinalCoordinates());
+        Debug.Log("Corner 2 :" + corner2.getFinalCoordinates());
+
+        FindCircleCircleTangents(corner1.getFinalCoordinates(), 1.0f, corner2.getFinalCoordinates(), 1.0f,
                       out o11, out o12, out o21, out o22, out i11, out i12, out i21, out i22);
 
-        // select which tangents to use and then 
+        // select which tangents to use and then NOT WORKING CURRENTLY
         switch (tangentSelector)
         {
             // both circle's directions are positive - outer tangent 1
@@ -284,6 +287,9 @@ public class LinkManager : MonoBehaviour {
                 tempStraight.setPos1(o11);
                 tempStraight.setPos2(o12);
                 tempStraight.setAngle(1f);  // needs actually calculating. currently using for debugging
+                Debug.Log(tempStraight.getAngle());
+                Debug.Log(tempStraight.getPos1());
+                Debug.Log(tempStraight.getPos2());
                 break;
 
             // both circle's directions are negative - outer tangent 2
@@ -307,10 +313,7 @@ public class LinkManager : MonoBehaviour {
                 tempStraight.setAngle(4f);
                 break;
         }
-
-        Debug.Log(tempStraight.getAngle());
-        Debug.Log(tempStraight.getPos1());
-        Debug.Log(tempStraight.getPos2());
+        // add straight to a list of straights
         tempStraights.Add(tempStraight);
 
     }

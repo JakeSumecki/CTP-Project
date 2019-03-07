@@ -25,6 +25,7 @@ public class GenerationManager : MonoBehaviour {
     bool[] hardCodeTurningDirection;
     float[] hardCodeCornerRadius;
 
+
     // Use this for initialization
     void Awake () {
         // link gameData
