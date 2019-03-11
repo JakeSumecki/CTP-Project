@@ -22,6 +22,7 @@ public class LinkManager : MonoBehaviour {
 
     // local version of gameData
     private GameData gameData;
+    public MathsFunctions mathsFunctions;
 
     // might want to move this, bit hacky
     List<Straight> tempStraights = new List<Straight>();
@@ -40,24 +41,32 @@ public class LinkManager : MonoBehaviour {
 
         // init gameData
         gameData = GameObject.FindObjectOfType<GameData>();
+        mathsFunctions = GameObject.FindObjectOfType<MathsFunctions>();
 
         #region TestArea
-        //Vector2 o11, o12, o21, o22, i11, i12, i21, i22;
+        Vector2 o11 = new Vector2(-1.0f, -1.0f);
+        Vector2 o12 = new Vector2(-1.0f, -1.0f);
+        Vector2 o21 = new Vector2(-1.0f, -1.0f);
+        Vector2 o22 = new Vector2(-1.0f, -1.0f);
+        Vector2 i11 = new Vector2(-1.0f, -1.0f);
+        Vector2 i12 = new Vector2(-1.0f, -1.0f);
+        Vector2 i21 = new Vector2(-1.0f, -1.0f);
+        Vector2 i22 = new Vector2(-1.0f, -1.0f);
 
-        //FindCircleCircleTangents(new Vector2(0.0f, 0.0f), 1.0f, new Vector2(0.0f, -3.0f), 1.0f,
-        //              out o11, out o12, out o21, out o22, out i11, out i12, out i21, out i22);
-        //Debug.Log(o11 + "|" + o12);
-        ////Debug.Log(o21 + "|" + o22);
-        ////Debug.Log(i11 + "|" + i12);
-        ////Debug.Log(i21 + "|" + i22); 
+        FindCircleCircleTangents(new Vector2(0.0f, 0.0f), 1.0f, new Vector2(3.0f, 3.0f), 1.0f,
+                      out o11, out o12, out o21, out o22, out i11, out i12, out i21, out i22);
+        Debug.Log(o11 + "|" + o12);
+        Debug.Log(o21 + "|" + o22);
+        Debug.Log(i11 + "|" + i12);
+        Debug.Log(i21 + "|" + i22);
         #endregion
 
         createCirclesFromPlaceholderCoordinates();
         createStraightsFromCircleTangents();
 
+        //mathsFunctions.testRNDNormalDis();
 
     }
-
 
     /// <summary>
     /// Creates the circles and stores the coordinates in gameData
@@ -127,7 +136,7 @@ public class LinkManager : MonoBehaviour {
 
    
     #region Ancillary Functions
-    #region Funtcions for Placing Circles 
+    #region Functions for Placing Circles 
     /// <summary>
     /// Calculates the circle positions and stores the positions in a Vector2 array in GameData
     /// </summary>
@@ -236,7 +245,7 @@ public class LinkManager : MonoBehaviour {
     }
     #endregion
 
-    #region Funtcions for Tanget Calculation
+    #region Functions for Tanget Calculation
     /// <summary>
     /// Calculates the correct tangent to use
     /// </summary>
@@ -245,7 +254,7 @@ public class LinkManager : MonoBehaviour {
     void calculateCorrectTangent(Corner corner1, Corner corner2)
     {
         int tangentSelector = -1;
-        Vector2 o11, o12, o21, o22, i11, i12, i21, i22;
+        
 
         Straight tempStraight = new Straight();
 
@@ -273,11 +282,15 @@ public class LinkManager : MonoBehaviour {
         }
         #endregion
 
-        Debug.Log("Corner 1 :" + corner1.getFinalCoordinates());
-        Debug.Log("Corner 2 :" + corner2.getFinalCoordinates());
+        Vector2 o11, o12, o21, o22, i11, i12, i21, i22;
 
-        FindCircleCircleTangents(corner1.getFinalCoordinates(), 1.0f, corner2.getFinalCoordinates(), 1.0f,
+        // this is the problem!!
+        //FindCircleCircleTangents(corner1.getFinalCoordinates(), 1.0f, corner2.getFinalCoordinates(), 1.0f,
+        //              out o11, out o12, out o21, out o22, out i11, out i12, out i21, out i22);
+
+        FindCircleCircleTangents(new Vector2(0.0f, 0.0f), 1.0f, new Vector2(3.0f, 3.0f), 1.0f,
                       out o11, out o12, out o21, out o22, out i11, out i12, out i21, out i22);
+
 
         // select which tangents to use and then NOT WORKING CURRENTLY
         switch (tangentSelector)
@@ -287,9 +300,11 @@ public class LinkManager : MonoBehaviour {
                 tempStraight.setPos1(o11);
                 tempStraight.setPos2(o12);
                 tempStraight.setAngle(1f);  // needs actually calculating. currently using for debugging
-                Debug.Log(tempStraight.getAngle());
-                Debug.Log(tempStraight.getPos1());
-                Debug.Log(tempStraight.getPos2());
+                //Debug.Log(tempStraight.getAngle());
+                //Debug.Log(tempStraight.getPos1());
+                //Debug.Log(tempStraight.getPos2());
+                //Debug.Log(o11);
+                //Debug.Log(o12);
                 break;
 
             // both circle's directions are negative - outer tangent 2

@@ -5,7 +5,13 @@ using UnityEngine;
 public class MathsFunctions : MonoBehaviour {
 
 
-	public int RandomNormalDistribution(float maxNumber)
+    void Start()
+    {
+        testRNDNormalDis();
+        Debug.Log("h");
+    }
+
+        public int RandomNormalDistribution(float maxNumber)
     {
         float answerFlt = Random.Range(0, maxNumber) + Random.Range(0, maxNumber);
         int answerInt = (int)answerFlt;
