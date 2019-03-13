@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Straight : MonoBehaviour {
+public class Straight {
 
 
     // Does this really need an index??

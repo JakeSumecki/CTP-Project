@@ -55,16 +55,19 @@ public class LinkManager : MonoBehaviour {
 
         FindCircleCircleTangents(new Vector2(0.0f, 0.0f), 1.0f, new Vector2(3.0f, 3.0f), 1.0f,
                       out o11, out o12, out o21, out o22, out i11, out i12, out i21, out i22);
-        Debug.Log(o11 + "|" + o12);
-        Debug.Log(o21 + "|" + o22);
-        Debug.Log(i11 + "|" + i12);
-        Debug.Log(i21 + "|" + i22);
+        //Debug.Log(o11 + "|" + o12);
+        //Debug.Log(o21 + "|" + o22);
+        //Debug.Log(i11 + "|" + i12);
+        //Debug.Log(i21 + "|" + i22);
+
+
+        //private 
         #endregion
 
         createCirclesFromPlaceholderCoordinates();
         createStraightsFromCircleTangents();
 
-        //mathsFunctions.testRNDNormalDis();
+        mathsFunctions.testRNDNormalDis();
 
     }
 

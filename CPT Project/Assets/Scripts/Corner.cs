@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Corner : MonoBehaviour {
+public class Corner {
 
     // data generated to create corners
     #region Preliminary Corner Data
