@@ -70,11 +70,13 @@ public class MathsFunctions : MonoBehaviour {
     /// <summary>
     /// /// Returns a number between minNumber and maxNumber with a normal distribution
     /// strength corresponds to hot strong the pull is towards the center
+    /// MIGHT NEED SEPERATE FUNCTIONS FOR ODD AND EVEN, LOOK INTO
     /// </summary>
     /// <param name="minNumber">minimum number</param>
     /// <param name="maxNumber">maximum number</param>
     /// <param name="strength">How strong the "pull" is towards the centre</param>
     /// <returns></returns>
+    /// 
     public int RandomNormalDistributionINT(float minNumber, float maxNumber, int strength)
     {
         // used to get an answer between 0 & maxnumber
@@ -570,6 +572,7 @@ public class MathsFunctions : MonoBehaviour {
     {
         //Debug.Log(transformPosition(new Vector2(5, 5), new Vector2(0, 0)));
         //Debug.Log(rotateNodeAroundNode(new Vector2(8f, 5f), new Vector2(5.0f, 5.0f), 60));
+        
     }
 
     public void testRNDNormalDis()
