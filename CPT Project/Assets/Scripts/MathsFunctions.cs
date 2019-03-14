@@ -77,14 +77,18 @@ public class MathsFunctions : MonoBehaviour {
     /// <returns></returns>
     public int RandomNormalDistributionINT(float minNumber, float maxNumber, int strength)
     {
+        // used to get an answer between 0 & maxnumber
+        float tempMax = (maxNumber - minNumber) + 1;
+
         float answerFlt = 0f;
+
         for (int i = 0; i < strength; i++)
         {
-            answerFlt += UnityEngine.Random.Range(minNumber, maxNumber);
+            answerFlt += UnityEngine.Random.Range(0, tempMax);
         }
 
         // average the number
-        answerFlt = answerFlt / strength;
+        answerFlt = (answerFlt / strength) + minNumber;
 
         int answerInt = (int)answerFlt;
 
@@ -101,14 +105,18 @@ public class MathsFunctions : MonoBehaviour {
     /// <returns></returns>
     public float RandomNormalDistributionFLT(float minNumber, float maxNumber, int strength)
     {
+        // used to get an answer between 0 & maxnumber
+        float tempMax = maxNumber - minNumber;
+
         float answerFlt = 0f;
+
         for (int i = 0; i < strength; i++)
         {
-            answerFlt += UnityEngine.Random.Range(minNumber, maxNumber);
+            answerFlt += UnityEngine.Random.Range(0, tempMax);
         }
 
         // average the number
-        answerFlt = answerFlt / strength;
+        answerFlt = (answerFlt / strength) + minNumber;
 
         return answerFlt;
     } 
@@ -561,7 +569,7 @@ public class MathsFunctions : MonoBehaviour {
     public void Start()
     {
         //Debug.Log(transformPosition(new Vector2(5, 5), new Vector2(0, 0)));
-        Debug.Log(rotateNodeAroundNode(new Vector2(8f, 5f), new Vector2(5.0f, 5.0f), 60));
+        //Debug.Log(rotateNodeAroundNode(new Vector2(8f, 5f), new Vector2(5.0f, 5.0f), 60));
     }
 
     public void testRNDNormalDis()

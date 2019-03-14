@@ -6,7 +6,7 @@ using UnityEngine;
 public class LinkManager : MonoBehaviour {
 
     #region bools for inspector
-    [SerializeField]
+    /*[SerializeField]
     private int specificCorner;
     [SerializeField]
     bool intersectionPointsB = false;
@@ -17,12 +17,12 @@ public class LinkManager : MonoBehaviour {
     [SerializeField]
     bool closestPointB = false;
     [SerializeField]
-    private bool output = false; 
+    private bool output = false;*/ 
     #endregion
 
     // local version of gameData
     private GameData gameData;
-    public MathsFunctions mathsFunctions;
+    private MathsFunctions mathsFunctions;
 
     // might want to move this, bit hacky
     List<Straight> tempStraights = new List<Straight>();
@@ -53,7 +53,7 @@ public class LinkManager : MonoBehaviour {
         Vector2 i21 = new Vector2(-1.0f, -1.0f);
         Vector2 i22 = new Vector2(-1.0f, -1.0f);
 
-        mathsFunctions.FindCircleCircleTangents(new Vector2(0.0f, 0.0f), 1.0f, new Vector2(3.0f, 3.0f), 1.0f,
+       mathsFunctions.FindCircleCircleTangents(new Vector2(0.0f, 0.0f), 1.0f, new Vector2(3.0f, 3.0f), 1.0f,
                       out o11, out o12, out o21, out o22, out i11, out i12, out i21, out i22);
         //Debug.Log(o11 + "|" + o12);
         //Debug.Log(o21 + "|" + o22);
@@ -66,8 +66,6 @@ public class LinkManager : MonoBehaviour {
 
         createCirclesFromPlaceholderCoordinates();
         createStraightsFromCircleTangents();
-
-        mathsFunctions.testRNDNormalDis();
 
     }
 
@@ -279,7 +277,7 @@ public class LinkManager : MonoBehaviour {
     /// <summary>
     /// Used to output data to Unity's debugger
     /// </summary>
-    private void runOutput()
+    /*private void runOutput()
     {
 
         if (output)
@@ -309,12 +307,12 @@ public class LinkManager : MonoBehaviour {
             output = false;
         }
         return;
-    }
+    }*/
     #endregion
 
     void Update()
     {
-        runOutput();
+        //runOutput();
     }
 }
 
