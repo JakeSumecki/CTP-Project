@@ -5,19 +5,18 @@ using UnityEngine;
 public class GameData : MonoBehaviour {
 
     #region Private Variables
+
     private int amountOfCorners;
+
     private List<Corner> corners = new List<Corner>();
     private List<Straight> straights = new List<Straight>();
 
-    #region Generated Corner Variables
+    //Generated Corner Var's
     private Vector2[] cornerCoords; // initial coordinates
-
-    
     private int[] cornerOrder;
     private bool[] cornerTurningDirection;
     private float[] cornerRadius;
-    //rivate Vector2 fin
-    #endregion
+   
 
     #endregion
 

@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenerationManager : MonoBehaviour
-{
+public class NodeGenerator : MonoBehaviour {
+
     #region Variables
     private MathsFunctions mathsFunctions;
     private Phase1Stats stats;
+
+    List<Corner> tempCorners = new List<Corner>();
+    Corner tempCorner = new Corner();
 
     private enum typeOfProcGenEnum
     {
@@ -30,7 +33,7 @@ public class GenerationManager : MonoBehaviour
 
     #region Inspector
     [SerializeField]
-    public bool RunProgram;
+    private bool RunProgram;
 
     #region Procedural Generation
     [Header("Procedural generation")]
@@ -80,8 +83,14 @@ public class GenerationManager : MonoBehaviour
     [Header("Stage 4 Distortion 2")]
     [SerializeField]
     [Range(4, 15)]
-    private int AmountOfDistortion2 = 4;  
+    private int AmountOfDistortion2 = 4;
     #endregion
+    #endregion
+
+    #region Node Generation
+    [Header("Node Generation")]
+    [SerializeField]
+    private bool GenerateNodes; 
     #endregion
 
     private void Start()
@@ -98,6 +107,12 @@ public class GenerationManager : MonoBehaviour
         {
             generateStats();
             GenerateStats = false;
+        }
+
+        if (GenerateNodes)
+        {
+            generateNodes();
+            GenerateNodes = false;
         }
 
         // set track size
@@ -161,6 +176,11 @@ public class GenerationManager : MonoBehaviour
         }
     }
 
+    private void generateNodes()
+    {
+        sizeAndPlaceCornerstones();
+    }
+
     #region Node Quantity Generation Functions
     private void normalDistributionStats(int coefficient)
     {
@@ -205,7 +225,7 @@ public class GenerationManager : MonoBehaviour
         createDistortion1andDistortion2withRatio(30, 5);
 
 
-    } 
+    }
 
     /// <summary>
     /// Creates amount of corners for the track whilst keeping them correlated to each other
@@ -232,7 +252,7 @@ public class GenerationManager : MonoBehaviour
         tempLength += mathsFunctions.RandomNormalDistributionFLT(-lengthVariation, lengthVariation, 5);
 
         // if track length goes over limit cap it
-        if(tempLength > stats.getTrackSizeMax())
+        if (tempLength > stats.getTrackSizeMax())
         {
             tempLength = stats.getTrackSizeMax();
         }
@@ -254,22 +274,88 @@ public class GenerationManager : MonoBehaviour
     private void createDistortion1andDistortion2withRatio(float percent, float variation)
     {
         // add variation to the percentage
-        int tempPercent = (int)(percent + UnityEngine.Random.Range(-(variation/2), (variation / 2)));
-        Debug.Log(tempPercent);
+        int tempPercent = (int)(percent + UnityEngine.Random.Range(-(variation / 2), (variation / 2)));
 
         // find out how many corners are left to place
         int cornersLeft = AmountOfCorners - AmountOfCornerstones - AmountOfAlcoves;
-        Debug.Log(cornersLeft);
-
 
         AmountOfDistortion1 = (int)(cornersLeft * (tempPercent / 100.0f));
         AmountOfDistortion2 = cornersLeft - AmountOfDistortion1;
 
-        Debug.Log(AmountOfDistortion1);
-        Debug.Log(AmountOfDistortion2);
-
     }
     #endregion
 
+    #region Size and Placement Functions
+
+    private void sizeAndPlaceCornerstones()
+    {
+        //set up inital corner at (0,0)
+        float tempRadius = 5.0f;
+        tempCorner.setUpCorner(Vector2.zero, -1, tempRadius, true, Vector2.negativeInfinity, 0);
+        tempCorners.Add(tempCorner);
+
+        cornerstonePlacementMethods(0);
+
+    }
+
+    private void sizeAndPlaceAlcoves()
+    {
+
+    }
+    private void sizeAndPlaceDistortion1()
+    {
+
+    }
+    private void sizeAndPlaceDistortion2()
+    {
+
+    }
+    private void storeCornerQuantityData()
+    {
+
+
+    } 
+    #endregion
+
+    private void cornerstonePlacementMethods(int methodSelector)
+    {
+        float sideA, sideB, sideC, sideD;
+        Vector2 node1;
+        Vector2 node2;
+        Vector2 node3;
+
+        if (AmountOfCornerstones == 4)
+        {
+            switch (methodSelector)
+            {
+                // create perfect sqaure
+                case 0:
+
+                    sideA = LengthOfTrack / 4;
+                    node1 = new Vector2(0.0f, sideA);
+
+                    //Node 2
+                    tempCorner.setUpCorner(node1, -1, 5.0f, true, Vector2.negativeInfinity, 0);
+                    tempCorners.Add(tempCorner);
+
+                    //Node 3
+                    node2 = mathsFunctions.transformAndRotate(new Vector2(0.0f, sideA), node1, 90.0f);
+
+                    //Node 4
+                    node3 = mathsFunctions.transformAndRotate(new Vector2(0.0f, sideA), node2, 180.0f);
+
+                    Debug.Log(node1 + " | " + node2 + " | " + node3);
+
+                    break;
+                // create parallelogram
+                case 1:
+                    break;
+            }
+        }
+
+
+    }
+
 }
+
 

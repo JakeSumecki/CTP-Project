@@ -125,6 +125,24 @@ public class MathsFunctions : MonoBehaviour {
     #endregion
 
     #region Transformation Functions
+
+    /// <summary>
+    /// Transform and rotation combined
+    /// </summary>
+    /// <param name="baseNode"></param>
+    /// <param name="node2"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public Vector2 transformAndRotate(Vector2 baseNode, Vector2 node2, float angle)
+    {
+        Vector2 temp;
+
+        temp = transformPosition(baseNode, node2);
+        temp = rotateNodeAroundNode(temp,node2, angle);
+
+        return temp;
+    }
+
     /// <summary>
     /// Takes two positions and adds them together to give the position of Node 1 on Node 2
     /// For use in placing nodes after calculated
@@ -147,7 +165,10 @@ public class MathsFunctions : MonoBehaviour {
     /// <returns>Rotated point</returns>
     public Vector2 rotateNodeAroundNode(Vector2 pointToRotate, Vector2 centerPoint, double angleInDegrees)
     {
-        double angleInRadians = angleInDegrees * (Math.PI / 180);
+        // used to make the function work clockwise, not counter-clockwise
+        double tempAngle = 360.0f - angleInDegrees;
+
+        double angleInRadians = tempAngle * (Math.PI / 180);
         double cosTheta = Math.Cos(angleInRadians);
         double sinTheta = Math.Sin(angleInRadians);
         return new Vector2(
@@ -571,7 +592,7 @@ public class MathsFunctions : MonoBehaviour {
     public void Start()
     {
         //Debug.Log(transformPosition(new Vector2(5, 5), new Vector2(0, 0)));
-        //Debug.Log(rotateNodeAroundNode(new Vector2(8f, 5f), new Vector2(5.0f, 5.0f), 60));
+        Debug.Log(rotateNodeAroundNode(new Vector2(0f, 3f), new Vector2(0.0f, 0.0f), 90));
         
     }
 

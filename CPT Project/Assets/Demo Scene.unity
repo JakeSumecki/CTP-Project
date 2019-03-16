@@ -426,7 +426,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1564040177}
   - component: {fileID: 1564040180}
-  - component: {fileID: 1564040179}
+  - component: {fileID: 1564040181}
   - component: {fileID: 1564040178}
   m_Layer: 0
   m_Name: Phase 1 - Generation
@@ -459,27 +459,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78865f2fd8776e04caabd871613be127, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1564040179
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1564040176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 175a1da29cc0ecb4a91eb88f317d617e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RunProgram: 0
-  GenerateStats: 0
-  typeOfProcGen: 5
-  trackSize: 0
-  LengthOfTrack: 3100
-  AmountOfCorners: 10
-  AmountOfCornerstones: 4
-  AmountOfAlcoves: 0
-  AmountOfDistortion1: 2
-  AmountOfDistortion2: 4
 --- !u!114 &1564040180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,6 +470,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 044ba4471d8fe1346aacb252678417a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1564040181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1564040176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c39b680623666a846a5f5f77e74b7829, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RunProgram: 0
+  GenerateStats: 0
+  typeOfProcGen: 0
+  trackSize: 0
+  LengthOfTrack: 3100
+  AmountOfCorners: 10
+  AmountOfCornerstones: 4
+  AmountOfAlcoves: 0
+  AmountOfDistortion1: 2
+  AmountOfDistortion2: 4
+  GenerateNodes: 0
 --- !u!1 &1633216242
 GameObject:
   m_ObjectHideFlags: 0

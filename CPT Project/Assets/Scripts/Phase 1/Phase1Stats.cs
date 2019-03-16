@@ -5,23 +5,34 @@ using UnityEngine;
 public class Phase1Stats : MonoBehaviour {
 
     #region Variables
+    //----------------------TRACK-STATS-------------------------//
     private float trackSizeMin;
     private float trackSizeMax;
 
     private int amountOfCornersMin;
     private int amountOfCornersMax;
 
+
     private int amountOfCornerstonesMin;
     private int amountOfCornerstonesMax;
+    private float radiusOfCornerstonesMin;
+    private float radiusOfCornerstonesMax;
 
     private int amountOfAlcovesMin;
     private int amountOfAlcovesMax;
+    private float radiusOfAlcovesMin;
+    private float radiusOfAlcovesMax;
 
     private int amountOfDistortion1Min;
     private int amountOfDistortion1Max;
+    private float radiusOfDistortion1Min;
+    private float radiusOfDistortion1Max;
 
     private int amountOfDistortion2Min;
-    private int amountOfDistortion2Max; 
+    private int amountOfDistortion2Max;
+    private float radiusOfDistortion2Min;
+    private float radiusOfDistortion2Max;
+
     #endregion
 
     private void Awake()
@@ -34,15 +45,23 @@ public class Phase1Stats : MonoBehaviour {
 
         amountOfCornerstonesMin = 3;
         amountOfCornerstonesMax = 5;
+        radiusOfCornerstonesMin = 5.0f;
+        radiusOfCornerstonesMax = 20.0f;
 
         amountOfAlcovesMin = 0;
         amountOfAlcovesMax = 4;
+        radiusOfAlcovesMin = 0.0f;
+        radiusOfAlcovesMax = 0.0f;
 
         amountOfDistortion1Min = 0;
         amountOfDistortion1Max = 5;
+        radiusOfDistortion1Min = 0.0f;
+        radiusOfDistortion1Max = 0.0f;
 
         amountOfDistortion2Min = 4;
         amountOfDistortion2Max = 15;
+        radiusOfDistortion2Min = 0.0f;
+        radiusOfDistortion2Max = 0.0f; 
     }
 
     #region Getters
