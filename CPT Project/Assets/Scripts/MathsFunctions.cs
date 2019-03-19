@@ -129,8 +129,8 @@ public class MathsFunctions : MonoBehaviour {
     /// <summary>
     /// Transform and rotation combined
     /// </summary>
-    /// <param name="baseNode"></param>
-    /// <param name="node2"></param>
+    /// <param name="baseNode">Vector to be moved (after transformation from origin)</param>
+    /// <param name="node2">Node to be transformed to then rotated around</param>
     /// <param name="angle"></param>
     /// <returns></returns>
     public Vector2 transformAndRotate(Vector2 baseNode, Vector2 node2, float angle)

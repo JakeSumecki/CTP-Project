@@ -290,11 +290,11 @@ public class NodeGenerator : MonoBehaviour {
     private void sizeAndPlaceCornerstones()
     {
         //set up inital corner at (0,0)
-        float tempRadius = 5.0f;
-        tempCorner.setUpCorner(Vector2.zero, -1, tempRadius, true, Vector2.negativeInfinity, 0);
-        tempCorners.Add(tempCorner);
+        //float tempRadius = 5.0f;
+        //tempCorner.setUpCorner(Vector2.zero, -1, tempRadius, true, Vector2.negativeInfinity, 0);
+        //tempCorners.Add(tempCorner);
 
-        cornerstonePlacementMethods(0);
+        cornerstonePlacementMethods(2);
 
     }
 
@@ -319,10 +319,10 @@ public class NodeGenerator : MonoBehaviour {
 
     private void cornerstonePlacementMethods(int methodSelector)
     {
+        //Variables used in calculations
+        float trackLeft = LengthOfTrack;
         float sideA, sideB, sideC, sideD;
-        Vector2 node1;
-        Vector2 node2;
-        Vector2 node3;
+        float angleAB, angleBC;
 
         if (AmountOfCornerstones == 4)
         {
@@ -330,32 +330,113 @@ public class NodeGenerator : MonoBehaviour {
             {
                 // create perfect sqaure
                 case 0:
-
                     sideA = LengthOfTrack / 4;
-                    node1 = new Vector2(0.0f, sideA);
-
-                    //Node 2
-                    tempCorner.setUpCorner(node1, -1, 5.0f, true, Vector2.negativeInfinity, 0);
-                    tempCorners.Add(tempCorner);
-
-                    //Node 3
-                    node2 = mathsFunctions.transformAndRotate(new Vector2(0.0f, sideA), node1, 90.0f);
-
-                    //Node 4
-                    node3 = mathsFunctions.transformAndRotate(new Vector2(0.0f, sideA), node2, 180.0f);
-
-                    Debug.Log(node1 + " | " + node2 + " | " + node3);
-
+                    setUpCornerstones(sideA, sideA, sideA, 90.0f, 90.0f);
                     break;
-                // create parallelogram
+                // create perfect rectangle wide
                 case 1:
+                    // get a quarter of the track. Use side A as a temp
+                    sideA = (LengthOfTrack / 8);
+
+                    // get a value between 1/8 && 1/4 to use as width of sideA
+                    sideB = sideA + UnityEngine.Random.Range(0, sideA);
+
+                    // how much track is left
+                    trackLeft = LengthOfTrack - (sideB * 2);
+
+                    sideA = trackLeft / 2;
+
+                    //side A is used for side C because theyre the same (rectangle)
+                    setUpCornerstones(sideA, sideB, sideA, 90.0f, 90.0f);
+
                     break;
+                // create perfect rectangle wide
+                case 2:
+                    // get a quarter of the track. Use side A as a temp
+                    sideA = (LengthOfTrack / 8);
+
+                    // get a value between 1/8 && 1/4 to use as width of sideA. Added 5.0f to make sure theres room for the corner
+                    sideB = sideA + 5.0f - UnityEngine.Random.Range(0, sideA);
+
+                    // how much track is left
+                    trackLeft = LengthOfTrack - (sideB * 2);
+
+                    sideA = trackLeft / 2;
+
+                    //side A is used for side C because theyre the same (rectangle)
+                    setUpCornerstones(sideA, sideB, sideA, 90.0f, 90.0f);
+
+
+                    break;
+
+                // create parallelogram
+                case 3:
+                    break;
+
+                // create rough sqaure
+                case 4:
+                    // Gives sideA a length of  1/4 of the length of track +/- 10% 
+                    sideA = (UnityEngine.Random.Range(LengthOfTrack - (LengthOfTrack / 10), LengthOfTrack + (LengthOfTrack / 10))) / 4;
+                    trackLeft -= sideA;
+
+                    // Gives sideB a length of  1/4 of the length of track +/- 10% 
+                    sideC = (UnityEngine.Random.Range(LengthOfTrack - (LengthOfTrack / 10), LengthOfTrack + (LengthOfTrack / 10))) / 4;
+                    trackLeft -= sideC;
+
+                    // takes half of whats left to use of track length
+                    sideB = (LengthOfTrack - trackLeft) / 2;
+
+                    //create angle roughly 90 degrees
+                    angleAB = mathsFunctions.RandomNormalDistributionFLT(80.0f, 100.0f, 15);
+                    angleBC = mathsFunctions.RandomNormalDistributionFLT(80.0f, 100.0f, 15);
+
+                    setUpCornerstones(sideA, sideB, sideC, angleAB, angleBC);
+                    break;
+
             }
         }
+    }
+    /// <summary>                                                                     B
+    ///                                                                         -------------
+    /// </summary>                                                              |AB/     \BC|
+    /// <param name="sideA">Size of sideA</param>                               |           |
+    /// <param name="sideB">Size of sideB</param>                             A |           | C
+    /// <param name="sideC">Size of sideC</param>                               |           | 
+    /// <param name="angleAB">Size of angle AB</param>                          |___________|
+    /// <param name="angleBC">Size of angle BC</param>                                D
+    private void setUpCornerstones(float sideA, float sideB, float sideC, float angleAB, float angleBC)
+    {
+        Vector2 node1 = Vector2.zero;
+        Vector2 node2 = new Vector2(0.0f, sideA);
+        Vector2 node3 = new Vector2(0.0f, sideB);
+        Vector2 node4 = new Vector2(0.0f, sideC);
 
+        float interimCornerSize = 5.0f;                 // REPLACE LATER
+
+        //Node 1
+        tempCorner.setUpCorner(node1, -1, interimCornerSize, true, Vector2.negativeInfinity, 0);
+        tempCorners.Add(tempCorner);
+
+        //Node 2 Node 1 (0,0) + sideA
+        tempCorner.setUpCorner(node2, -1, interimCornerSize, true, Vector2.negativeInfinity, 0);
+        tempCorners.Add(tempCorner);
+
+        //Node 3 : Node 2 + Side A rotated by angleAB
+        node3 = mathsFunctions.transformAndRotate(node3, node2, angleAB);
+        tempCorner.setUpCorner(node3, -1, interimCornerSize, true, Vector2.negativeInfinity, 0);
+        tempCorners.Add(tempCorner);
+
+        //Node 4 : Node 3 + Side A rotated 90 rotated by angleBC + angleAB                              //Might need to change the angle part dependant on implimentation elsewhere
+        node4 = mathsFunctions.transformAndRotate(node4, node3, angleBC + angleAB);
+        tempCorner.setUpCorner(node4, -1, interimCornerSize, true, Vector2.negativeInfinity, 0);
+        tempCorners.Add(tempCorner);
+
+        Debug.Log(node1 + " | " + node2 + " | " + node3 + " | " + node4);
 
     }
 
 }
+
+
 
 
