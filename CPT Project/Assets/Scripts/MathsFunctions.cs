@@ -592,7 +592,7 @@ public class MathsFunctions : MonoBehaviour {
     public void Start()
     {
         //Debug.Log(transformPosition(new Vector2(5, 5), new Vector2(0, 0)));
-        Debug.Log(rotateNodeAroundNode(new Vector2(0f, 3f), new Vector2(0.0f, 0.0f), 90));
+        //Debug.Log(rotateNodeAroundNode(new Vector2(0f, 3f), new Vector2(0.0f, 0.0f), 90));
         
     }
 

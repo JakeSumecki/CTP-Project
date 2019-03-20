@@ -29,11 +29,27 @@ public class NodeGenerator : MonoBehaviour {
         MEDIUM,
         LARGE
     };
+
+    private enum cornerstoneLayoutEnum
+    {
+        PERFECT_SQAURE,
+        PERFECT_RECTANGLE_WIDE,
+        PREFECT_RECTANGLE_NARROW,
+        ROUGH_SQAURE,
+        ROUGH_TRAPEZIUM,
+        LEFT_SKEW_PARALLELOGRAM,
+        RIGHT_SKEW_PARALLELOGRAM
+    };
     #endregion
 
     #region Inspector
     [SerializeField]
     private bool RunProgram;
+
+    [SerializeField]
+    private bool VisualizeCoordinates;
+
+    public GameObject nodeObject; 
 
     #region Procedural Generation
     [Header("Procedural generation")]
@@ -85,12 +101,15 @@ public class NodeGenerator : MonoBehaviour {
     [Range(4, 15)]
     private int AmountOfDistortion2 = 4;
     #endregion
-    #endregion
 
     #region Node Generation
     [Header("Node Generation")]
     [SerializeField]
-    private bool GenerateNodes; 
+    private bool GenerateNodes;
+
+    [SerializeField]
+    private cornerstoneLayoutEnum cornerstoneLayout;
+    #endregion
     #endregion
 
     private void Start()
@@ -294,7 +313,7 @@ public class NodeGenerator : MonoBehaviour {
         //tempCorner.setUpCorner(Vector2.zero, -1, tempRadius, true, Vector2.negativeInfinity, 0);
         //tempCorners.Add(tempCorner);
 
-        cornerstonePlacementMethods(2);
+        cornerstonePlacementMethods();
 
     }
 
@@ -317,7 +336,11 @@ public class NodeGenerator : MonoBehaviour {
     } 
     #endregion
 
-    private void cornerstonePlacementMethods(int methodSelector)
+    /// <summary>
+    /// Holds different method of creating cornerstones (the outline of the whole track) 
+    /// </summary>
+    /// <param name="methodSelector"></param>
+    private void cornerstonePlacementMethods()
     {
         //Variables used in calculations
         float trackLeft = LengthOfTrack;
@@ -326,15 +349,16 @@ public class NodeGenerator : MonoBehaviour {
 
         if (AmountOfCornerstones == 4)
         {
-            switch (methodSelector)
+            switch (cornerstoneLayout)
             {
-                // create perfect sqaure
-                case 0:
+                //==============CREATES A PERFECT SQAURE=======================//
+                case cornerstoneLayoutEnum.PERFECT_SQAURE:
                     sideA = LengthOfTrack / 4;
-                    setUpCornerstones(sideA, sideA, sideA, 90.0f, 90.0f);
+                    setUpCornerstones(sideA, sideA, sideA, 90.0f, 90.0f);            
                     break;
-                // create perfect rectangle wide
-                case 1:
+
+                //==============CREATES A SHORT PERFECT RECTANGLE==============//
+                case cornerstoneLayoutEnum.PERFECT_RECTANGLE_WIDE:
                     // get a quarter of the track. Use side A as a temp
                     sideA = (LengthOfTrack / 8);
 
@@ -348,10 +372,10 @@ public class NodeGenerator : MonoBehaviour {
 
                     //side A is used for side C because theyre the same (rectangle)
                     setUpCornerstones(sideA, sideB, sideA, 90.0f, 90.0f);
-
                     break;
-                // create perfect rectangle wide
-                case 2:
+
+                //==============CREATES A WIDE PERFECT RECTANGLE==============//
+                case cornerstoneLayoutEnum.PREFECT_RECTANGLE_NARROW:
                     // get a quarter of the track. Use side A as a temp
                     sideA = (LengthOfTrack / 8);
 
@@ -365,16 +389,10 @@ public class NodeGenerator : MonoBehaviour {
 
                     //side A is used for side C because theyre the same (rectangle)
                     setUpCornerstones(sideA, sideB, sideA, 90.0f, 90.0f);
-
-
                     break;
 
-                // create parallelogram
-                case 3:
-                    break;
-
-                // create rough sqaure
-                case 4:
+                //=================CREATES A ROUGH SQAURE=====================//
+                case cornerstoneLayoutEnum.ROUGH_SQAURE:
                     // Gives sideA a length of  1/4 of the length of track +/- 10% 
                     sideA = (UnityEngine.Random.Range(LengthOfTrack - (LengthOfTrack / 10), LengthOfTrack + (LengthOfTrack / 10))) / 4;
                     trackLeft -= sideA;
@@ -392,10 +410,14 @@ public class NodeGenerator : MonoBehaviour {
 
                     setUpCornerstones(sideA, sideB, sideC, angleAB, angleBC);
                     break;
+                case cornerstoneLayoutEnum.ROUGH_TRAPEZIUM:
 
+
+                    break;
             }
         }
     }
+
     /// <summary>                                                                     B
     ///                                                                         -------------
     /// </summary>                                                              |AB/     \BC|
@@ -406,6 +428,8 @@ public class NodeGenerator : MonoBehaviour {
     /// <param name="angleBC">Size of angle BC</param>                                D
     private void setUpCornerstones(float sideA, float sideB, float sideC, float angleAB, float angleBC)
     {
+        tempCorners.Clear();
+
         Vector2 node1 = Vector2.zero;
         Vector2 node2 = new Vector2(0.0f, sideA);
         Vector2 node3 = new Vector2(0.0f, sideB);
@@ -414,24 +438,56 @@ public class NodeGenerator : MonoBehaviour {
         float interimCornerSize = 5.0f;                 // REPLACE LATER
 
         //Node 1
-        tempCorner.setUpCorner(node1, -1, interimCornerSize, true, Vector2.negativeInfinity, 0);
-        tempCorners.Add(tempCorner);
+        Corner cornerstone1 = new Corner();
+        cornerstone1.setUpCorner(node1, -1, interimCornerSize, true, Vector2.negativeInfinity, 0);
+        tempCorners.Add(cornerstone1);
+        //Debug.Log(cornerstone11.getPlaceholderCoordinates());
 
         //Node 2 Node 1 (0,0) + sideA
-        tempCorner.setUpCorner(node2, -1, interimCornerSize, true, Vector2.negativeInfinity, 0);
-        tempCorners.Add(tempCorner);
+        Corner cornerstone2 = new Corner();
+        cornerstone2.setUpCorner(node2, -1, interimCornerSize, true, Vector2.negativeInfinity, 0);
+        tempCorners.Add(cornerstone2);
+        //Debug.Log(cornerstone2.getPlaceholderCoordinates());
 
         //Node 3 : Node 2 + Side A rotated by angleAB
+        Corner cornerstone3 = new Corner();
         node3 = mathsFunctions.transformAndRotate(node3, node2, angleAB);
-        tempCorner.setUpCorner(node3, -1, interimCornerSize, true, Vector2.negativeInfinity, 0);
-        tempCorners.Add(tempCorner);
+        cornerstone3.setUpCorner(node3, -1, interimCornerSize, true, Vector2.negativeInfinity, 0);
+        tempCorners.Add(cornerstone3);
+        //Debug.Log(cornerstone3.getPlaceholderCoordinates());
 
-        //Node 4 : Node 3 + Side A rotated 90 rotated by angleBC + angleAB                              //Might need to change the angle part dependant on implimentation elsewhere
+        //Node 4 : Node 3 + Side A rotated 90 rotated by angleBC + angleAB //Might need to change the angle part dependant on implimentation elsewhere
+        Corner cornerstone4 = new Corner();
         node4 = mathsFunctions.transformAndRotate(node4, node3, angleBC + angleAB);
-        tempCorner.setUpCorner(node4, -1, interimCornerSize, true, Vector2.negativeInfinity, 0);
-        tempCorners.Add(tempCorner);
+        cornerstone4.setUpCorner(node4, -1, interimCornerSize, true, Vector2.negativeInfinity, 0);
+        tempCorners.Add(cornerstone4);
+        //Debug.Log(cornerstone4.getPlaceholderCoordinates());
 
-        Debug.Log(node1 + " | " + node2 + " | " + node3 + " | " + node4);
+        //Debug.Log(node1 + " | " + node2 + " | " + node3 + " | " + node4);
+
+
+        if (VisualizeCoordinates)
+        {
+            List<GameObject> go = new List<GameObject>();
+
+            // destroy previous nodes
+            for (int i = 0; i < go.Count; i++)
+            {
+                Destroy(go[i]);
+            }
+
+            //clear list
+            go.Clear();
+
+            //for loop is working correctly, data seems to be fucked
+            for (int i = 0; i < tempCorners.Count; i++)
+            {
+                tempCorner = tempCorners[i];
+                Debug.Log(tempCorner.getPlaceholderCoordinates());
+                GameObject newGO = Instantiate(nodeObject, new Vector3(tempCorner.getPlaceholderCoordinates().x, 0.0f, tempCorner.getPlaceholderCoordinates().y), Quaternion.identity);
+                go.Add(newGO);
+            }
+        }
 
     }
 
